@@ -1,0 +1,4 @@
+module(
+    name = "ypz_bazel_infrastructure",
+    version = "0.0.0",
+)
