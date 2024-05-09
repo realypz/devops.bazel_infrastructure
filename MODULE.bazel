@@ -1,4 +1,8 @@
 module(
-    name = "ypz_bazel_infrastructure",
+    name = "y_cpp_toolchain",
     version = "0.0.0",
 )
+
+# register_toolchains(
+#     "//toolchains/C++:macosx_homebrew_llvm_toolchain_wrapper"
+# )

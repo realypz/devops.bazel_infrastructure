@@ -1,0 +1,9 @@
+module(name = "ypz_bazel_infrastructure_test")
+
+bazel_dep(name = "y_cpp_toolchain", version = "0.0.0")
+local_path_override(
+    module_name = "y_cpp_toolchain",
+    path = "..",
+)
+
+y_cc_toolchain = use_extension("@y_cc_toolchains//toolchains/C++:", "cpp")

@@ -1,1 +1,9 @@
 MODULE.bazel.lock
+bazel-bin
+bazel-out
+bazel-testlogs
+bazel-devops.bazel_infrastructure
+.venv
+
+# Vscode
+.vscode
