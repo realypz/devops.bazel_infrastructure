@@ -5,6 +5,8 @@
 bazelisk run //tests/C++:hello 
 
 # Use the defined toolchain.
+# NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
+# Instead, it will resolve to the default toolchain.
 bazelisk run  --extra_toolchains=//toolchains/C++:macosx_homebrew_llvm_toolchain //tests/C++:hello 
 
 # Verbose the compiler print out.
