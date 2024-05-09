@@ -3,6 +3,7 @@ Test binary.
 */
 #include <iostream>
 #include <pthread.h>
+#include <atomic>
 
 void printCompilerInfo()
 {
@@ -47,6 +48,9 @@ int main()
         }
          
     }
+
+    std::atomic_int a(0);
+    std::cout << a.load() << std::endl;
 
     return 0;
 }

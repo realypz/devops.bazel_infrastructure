@@ -18,8 +18,8 @@ gcc tests/C++/hello.cpp -std=c++20 --verbose -lstdc++ -o tests/C++/hello
 # Use clang homebrew via Bazel Toolchain (not yet working)
 bazelisk run --cxxopt="--verbose" --cxxopt="-resource-dir=/opt/homebrew/Cellar/llvm" //tests/C++:hello
 
-# To use clang in Ubuntu
-/usr/lib/llvm-18/bin/clang --verbose -lc++ -std=c++20 -o tests/C++/hello tests/C++/hello.cpp
+# To use clang in Ubuntu. NOTE: -lc++ does not work, have to use -lstdc++
+/usr/lib/llvm-18/bin/clang --verbose -lstdc++ -std=c++20 -o tests/C++/hello tests/C++/hello.cpp
 ```
 
 ## The command not work
