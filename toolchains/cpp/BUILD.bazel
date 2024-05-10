@@ -1,5 +1,5 @@
-load(":cc_toolchain_config_macosx.bzl", "llvm_macosx_toolchain_config")
-load(":cc_toolchain_config_linux.bzl", "llvm_linux_toolchain_config")
+load("//toolchains/cpp/build_config:cc_toolchain_config_macosx.bzl", "llvm_macosx_toolchain_config")
+load("//toolchains/cpp/build_config:cc_toolchain_config_linux.bzl", "llvm_linux_toolchain_config")
 
 llvm_macosx_toolchain_config(
     name = "macosx_llvm",
