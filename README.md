@@ -7,16 +7,16 @@ bazelisk run //tests/C++:hello
 # Use the defined toolchain.
 # NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
 # Instead, it will resolve to the default toolchain.
-bazelisk run  --extra_toolchains=//toolchains/C++:macosx_homebrew_llvm_toolchain //tests/C++:hello
+bazelisk run  --extra_toolchains=//toolchains/C++:macosx.all_arch.homebrew_llvm_toolchain //tests/C++:hello
 
 # In Ubuntu, need to install libc++ manually
 sudo ./llvm.sh 18
 sudo apt-get install libc++-18-dev libc++abi-18-dev
 
-bazelisk run  --extra_toolchains=//toolchains/C++:linux_llvm_toolchain --cxxopt="--verbose" //tests/C++:hello 
+bazelisk run  --extra_toolchains=//toolchains/C++:linux.all_arch.llvm_toolchain --cxxopt="--verbose" //tests/C++:hello 
 
 # Verbose the compiler print out.
-bazelisk run  --cxxopt="--verbose" --extra_toolchains=//toolchains/C++:macosx_homebrew_llvm_toolchain //tests/C++:hello 
+bazelisk run  --cxxopt="--verbose" --extra_toolchains=//toolchains/C++:macosx.all_arch.homebrew_llvm_toolchain //tests/C++:hello 
 ```
 
 ## Knowledge
