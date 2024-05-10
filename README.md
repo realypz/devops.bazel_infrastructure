@@ -49,7 +49,7 @@ After these steps, you should be able to use `bazelisk` directly in terminal.
     ```
 
 
-## Example command
+## Bazel command
 ```shell
 # Default run, which will invoke the Bazel-determined toolchain.
 # NOTE: Bazel-determined toolchain is not the same as system default compiler and linker.
@@ -58,12 +58,18 @@ bazelisk run //tests/cpp:hello
 # Use the defined toolchain.
 # NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
 # Instead, it will silently resolve to the default toolchain.
-bazelisk run  --extra_toolchains=//toolchains/cpp:macosx.all_arch.homebrew_llvm_toolchain //tests/cpp:hello
+bazelisk run  --extra_toolchains=//toolchains/cpp:macosx.all_arch.homebrew_llvm_toolchain \
+ --cxxopt="--verbose" //tests/cpp:hello
 
-bazelisk run  --extra_toolchains=//toolchains/cpp:linux.all_arch.llvm_toolchain --cxxopt="--verbose" //tests/cpp:hello 
+bazelisk run  --extra_toolchains=//toolchains/cpp:linux.all_arch.llvm_toolchain \
+ --cxxopt="--verbose" //tests/cpp:hello
 
-# Verbose the compiler print out.
-bazelisk run  --cxxopt="--verbose" --extra_toolchains=//toolchains/cpp:macosx.all_arch.homebrew_llvm_toolchain //tests/cpp:hello 
+# Run bazel buildifier
+# Requires install the buildifier manually.
+buildifier -r .
+
+# Clang format
+bazelisk run //toolchains/cpp/format:clang_format_fix
 ```
 
 ## Knowledge

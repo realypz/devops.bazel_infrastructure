@@ -1,7 +1,7 @@
 load("@bazel_skylib//lib:shell.bzl", "shell")
 
 def _clang_format_impl(ctx):
-    out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
+    out_file = ctx.actions.declare_file(ctx.label.name + ".bash")  # ctx.label.name is the name of the rule.
     exclude_patterns = ["\\! -path {}".format(shell.quote(p)) for p in ctx.attr.exclude_patterns]
     include_patterns = ["-name {}".format(shell.quote(p)) for p in ctx.attr.patterns]
     workspace = ctx.file.workspace.path if ctx.file.workspace else ""

@@ -1,18 +1,18 @@
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 load("//toolchains/cpp/format:clang_format.bzl", "clang_format_check")
 
-filegroup(
-    name = "clang-format-binary",
-    srcs = [
-        ":clang-format-symlink",
-    ],
-    visibility = ["//visibility:public"],
+genrule(
+    name = "create-symlink",
+    srcs = [],
+    outs = ["clang-format-symlink"],
+    cmd = "ln -s /opt/homebrew/Cellar/llvm/18.1.5/bin/clang-format $(OUTS)",  # $(OUTS) refers to "outs" attribute
+    executable = True,
 )
 
 native_binary(
     name = "clang-format-native-binary",
+    src = ":create-symlink",
     out = "clang-format-native-binary",
-    src = ":clang-format-binary",
     visibility = ["//visibility:public"],
 )
 

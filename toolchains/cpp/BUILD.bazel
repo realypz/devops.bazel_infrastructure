@@ -1,17 +1,18 @@
-load("//toolchains/cpp/build_config:cc_toolchain_config_macosx.bzl", "llvm_macosx_toolchain_config")
-load("//toolchains/cpp/build_config:cc_toolchain_config_linux.bzl", "llvm_linux_toolchain_config")
+load("//toolchains/cpp/build_config:llvm_dir.bzl", "LLVM_TOOLCHAIN_DICT")
+load("//toolchains/cpp/build_config:llvm_toolchain_config.bzl", "MACRO_llvm_toolchain_config")
 
-llvm_macosx_toolchain_config(
+##### macOS llvm toolchain #####
+MACRO_llvm_toolchain_config(
     name = "macosx_llvm",
-    llvm_dir = "/opt/homebrew/Cellar/llvm/18.1.5/"
+    llvm_dir = LLVM_TOOLCHAIN_DICT["macosx"]["llvm_dir"],
+    llvm_major_version = LLVM_TOOLCHAIN_DICT["macosx"]["llvm_major_version"],
+    sysroot = LLVM_TOOLCHAIN_DICT["macosx"]["sysroot"],
 )
 
 filegroup(name = "empty")
 
 cc_toolchain(
     name = "_macosx_homebrew_llvm_toolchain",
-    toolchain_identifier = "llvm_toolchain_18.1.5",
-    toolchain_config = ":macosx_llvm",
     all_files = ":empty",
     compiler_files = ":empty",
     dwp_files = ":empty",
@@ -19,29 +20,33 @@ cc_toolchain(
     objcopy_files = ":empty",
     strip_files = ":empty",
     supports_param_files = 0,
+    toolchain_config = ":macosx_llvm",
+    toolchain_identifier = "_macosx_homebrew_llvm_toolchain_identifier",
 )
 
 toolchain(
     name = "macosx.all_arch.homebrew_llvm_toolchain",
-    toolchain = ":_macosx_homebrew_llvm_toolchain",
-    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
     exec_compatible_with = [
         "@platforms//os:macos",
     ],
     target_compatible_with = [
         "@platforms//os:macos",
     ],
+    toolchain = ":_macosx_homebrew_llvm_toolchain",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
 )
+##### macOS llvm toolchain (end) #####
 
-llvm_linux_toolchain_config(
+##### Linux llvm toolchain #####
+MACRO_llvm_toolchain_config(
     name = "linux_llvm",
-    llvm_dir = "/usr/lib/llvm-18/",
+    llvm_dir = LLVM_TOOLCHAIN_DICT["linux"]["llvm_dir"],
+    llvm_major_version = LLVM_TOOLCHAIN_DICT["linux"]["llvm_major_version"],
+    sysroot = LLVM_TOOLCHAIN_DICT["linux"]["sysroot"],
 )
 
 cc_toolchain(
     name = "_linux_llvm_toolchain",
-    toolchain_identifier = "linux-llvm_toolchain_18.1.3",
-    toolchain_config = ":linux_llvm",
     all_files = ":empty",
     compiler_files = ":empty",
     dwp_files = ":empty",
@@ -49,16 +54,19 @@ cc_toolchain(
     objcopy_files = ":empty",
     strip_files = ":empty",
     supports_param_files = 0,
+    toolchain_config = ":linux_llvm",
+    toolchain_identifier = "_linux_llvm_toolchain_identifier",
 )
 
 toolchain(
     name = "linux.all_arch.llvm_toolchain",
-    toolchain = ":_linux_llvm_toolchain",
-    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
     exec_compatible_with = [
         "@platforms//os:linux",
     ],
     target_compatible_with = [
         "@platforms//os:linux",
     ],
+    toolchain = ":_linux_llvm_toolchain",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
 )
+##### Linux llvm toolchain (end) #####
