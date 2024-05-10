@@ -4,7 +4,6 @@ load(
 )
 
 def llvm_linux_toolchain_config(name, llvm_dir):
-   # /usr/lib/llvm-18/
     LLVM_DIR = llvm_dir
 
     unix_cc_toolchain_config(
@@ -20,7 +19,7 @@ def llvm_linux_toolchain_config(name, llvm_dir):
         cxx_builtin_include_directories = [
             LLVM_DIR + "include/c++/v1",
             LLVM_DIR + "lib/clang/18/include",  # /opt/homebrew/Cellar/llvm/18.1.5/lib/clang/18/include
-            "/usr/include",
+            "%sysroot%/usr/include", # %sysroot% is replaced with the value of `builtin_sysroot` below.
         ],
         tool_paths = {
             "ar": LLVM_DIR + "bin/llvm-ar",
@@ -34,7 +33,6 @@ def llvm_linux_toolchain_config(name, llvm_dir):
             "strip": LLVM_DIR + "bin/llvm-strip",
         },
         compile_flags = [
-            # "--target=" + target_system_name,
             # Security
             "-U_FORTIFY_SOURCE",  # https://github.com/google/sanitizers/issues/247
             "-fstack-protector",

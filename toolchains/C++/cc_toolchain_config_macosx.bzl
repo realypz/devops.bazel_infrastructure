@@ -3,24 +3,23 @@ load(
     unix_cc_toolchain_config = "cc_toolchain_config",
 )
 
-def llvm_macosx_toolchain_config(name, llvm_version):
-    LLVM_VERSION = llvm_version
-    LLVM_DIR = "/opt/homebrew/Cellar/llvm/" + LLVM_VERSION + "/"
+def llvm_macosx_toolchain_config(name, llvm_dir):
+    LLVM_DIR = llvm_dir
 
     unix_cc_toolchain_config(
         name = name,
-        cpu = "aarch64",
-        compiler = "clang",
+        cpu = "not_checked",
+        compiler = "not_checked",
         toolchain_identifier = name,
-        host_system_name = "macosx",
-        target_system_name = "macosx",
+        host_system_name = "not_checked",
+        target_system_name = "not_checked",
         target_libc = "not_checked",
         abi_version = "not_checked",
         abi_libc_version = "not_checked",
         cxx_builtin_include_directories = [
             LLVM_DIR + "include/c++/v1",
             LLVM_DIR + "lib/clang/18/include",  # /opt/homebrew/Cellar/llvm/18.1.5/lib/clang/18/include
-            "%sysroot%/usr/include",
+            "%sysroot%/usr/include", # %sysroot% is replaced with the value of `builtin_sysroot` below.
         ],
         tool_paths = {
             "ar": LLVM_DIR + "bin/llvm-ar",
@@ -34,7 +33,6 @@ def llvm_macosx_toolchain_config(name, llvm_version):
             "strip": LLVM_DIR + "bin/llvm-strip",
         },
         compile_flags = [
-            # "--target=" + target_system_name,
             # Security
             "-U_FORTIFY_SOURCE",  # https://github.com/google/sanitizers/issues/247
             "-fstack-protector",
@@ -59,7 +57,7 @@ def llvm_macosx_toolchain_config(name, llvm_version):
                 "-stdlib=libc++", 
             ],
         link_flags = [
-            "--target=aarch64-apple-macosx", # NOTE: Disabled now. It seems you can pass any arbitrary string.
+            # "--target=aarch64-apple-macosx", # NOTE: Disabled now. It seems you can pass any arbitrary string.
             "-no-canonical-prefixes",
             "-headerpad_max_install_names",
             "-fobjc-link-runtime",
@@ -68,7 +66,7 @@ def llvm_macosx_toolchain_config(name, llvm_version):
             "-lc++abi",
             "-lunwind",
             # "-lm", # TODO: link math library.Disable for now, not necessary at the moment.
-            "-L/opt/homebrew/Cellar/llvm/18.1.5/lib", # Or equivalent as `--library-directory=<lib>`
+            "-L{}lib".format(LLVM_DIR), # Or equivalent as `--library-directory=<lib>`
             # "-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib", # NOTE: Disabled for now, not necessary at the moment.
             # "-Bstatic", # NOTE: Disabled for now, don't know how this flag affects the linking.
             # "-Bdynamic_t", # NOTE: Disabled for now, don't know how this flag affects the linking.

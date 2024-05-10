@@ -3,7 +3,7 @@ load(":cc_toolchain_config_linux.bzl", "llvm_linux_toolchain_config")
 
 llvm_macosx_toolchain_config(
     name = "macosx_llvm",
-    llvm_version = "18.1.5",
+    llvm_dir = "/opt/homebrew/Cellar/llvm/18.1.5/"
 )
 
 filegroup(name = "empty")
