@@ -7,7 +7,8 @@ Test binary.
 
 #include "lib/sys_info.h"
 
-void *threadFunction(void *arg) {
+void* threadFunction(void* arg)
+{
     // Perform thread tasks here...
     printf("Thread is running...\n");
     return NULL;
@@ -22,22 +23,21 @@ int main()
 {
     printCompilerInfo();
 
-    {   // System library pthread works
+    { // System library pthread works
         pthread_t thread_id;
         pthread_create(&thread_id, NULL, threadFunction, NULL);
         pthread_join(thread_id, NULL);
     }
 
-    {   // libunwind works
+    { // libunwind works
         try
         {
             // iWantThrow();
         }
-        catch(const std::exception& e)
+        catch (const std::exception& e)
         {
             std::cerr << e.what() << '\n';
         }
-         
     }
 
     std::atomic_int a(0);
