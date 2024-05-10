@@ -3,4 +3,7 @@ cc_binary(
     srcs = [
         "hello.cpp",
     ],
+    deps = [
+        "//tests/cpp/lib:sys_info",
+    ],
 )
