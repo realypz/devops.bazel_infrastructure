@@ -1,0 +1,6 @@
+cc_library(
+    name = "sys_info",
+    srcs = ["sys_info.cpp"],
+    hdrs = ["sys_info.h"],
+    visibility = ["//visibility:public"],
+)

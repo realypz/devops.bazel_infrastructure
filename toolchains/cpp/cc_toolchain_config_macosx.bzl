@@ -3,7 +3,7 @@ load(
     unix_cc_toolchain_config = "cc_toolchain_config",
 )
 
-def llvm_linux_toolchain_config(name, llvm_dir):
+def llvm_macosx_toolchain_config(name, llvm_dir):
     LLVM_DIR = llvm_dir
 
     unix_cc_toolchain_config(
@@ -57,7 +57,7 @@ def llvm_linux_toolchain_config(name, llvm_dir):
                 "-stdlib=libc++", 
             ],
         link_flags = [
-            # "--target=linux", # NOTE: Disabled now. It seems you can pass any arbitrary string.
+            # "--target=aarch64-apple-macosx", # NOTE: Disabled now. It seems you can pass any arbitrary string.
             "-no-canonical-prefixes",
             "-headerpad_max_install_names",
             "-fobjc-link-runtime",
@@ -77,7 +77,7 @@ def llvm_linux_toolchain_config(name, llvm_dir):
         unfiltered_compile_flags = [],
         coverage_compile_flags = ["-fprofile-instr-generate", "-fcoverage-mapping"],
         coverage_link_flags = ["-fprofile-instr-generate"],
-        supports_start_end_lib = True,
-        builtin_sysroot = "/",
+        supports_start_end_lib = False,
+        builtin_sysroot = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
         # Run `xcrun --show-sdk-path` to get the path to the SDK.
     )
