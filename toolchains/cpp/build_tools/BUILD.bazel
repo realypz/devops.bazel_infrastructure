@@ -70,3 +70,13 @@ toolchain(
     toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
 )
 ##### Linux llvm toolchain (end) #####
+
+##### Toolchain alias #####
+alias(
+    name = "llvm_toolchain",
+    actual = select({
+        "@platforms//os:macos": ":macosx.all_arch.homebrew_llvm_toolchain",
+        "@platforms//os:linux": ":linux.all_arch.llvm_toolchain",
+    }),
+)
+##### Toolchain alias (end) #####

@@ -55,22 +55,22 @@ After these steps, you should be able to use `bazelisk` directly in terminal.
 # NOTE: Bazel-determined toolchain is not the same as system default compiler and linker.
 bazelisk run //tests/cpp:hello 
 
-# Use the defined toolchain.
-# NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
-# Instead, it will silently resolve to the default toolchain.
-bazelisk run  --extra_toolchains=//toolchains/cpp/build_tools:macosx.all_arch.homebrew_llvm_toolchain \
- --cxxopt="--verbose" //tests/cpp:hello
-
-bazelisk run  --extra_toolchains=//toolchains/cpp/build_tools:linux.all_arch.llvm_toolchain \
- --cxxopt="--verbose" //tests/cpp:hello
+# To use llvm toolchain (work for both macOS and Linux, because an alias target is used)
+#   NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
+#         Instead, it will silently resolve to the default toolchain.
+bazelisk run  --extra_toolchains=//toolchains/cpp/build_tools:llvm_toolchain \
+  --cxxopt="--verbose" //tests/cpp:hello
 
 # Run bazel buildifier
 # Requires install the buildifier manually.
 buildifier -r .
 
 # Clang format
-bazelisk run //toolchains/cpp/format:clang_format_fix --//toolchains/Bazel/common/platform:os=macosx
-bazelisk run //toolchains/cpp/format:clang_format_fix --//toolchains/Bazel/common/platform:os=linux
+bazelisk run //toolchains/cpp/format:clang_format_fix
+#   You can also specify the config settings in command, e.g.
+#       bazelisk run //toolchains/cpp/format:clang_format_fix --//toolchains/Bazel/common/platform:os=macosx
+#       bazelisk run //toolchains/cpp/format:clang_format_fix --//toolchains/Bazel/common/platform:os=linux
+#   But not necessary.
 ```
 
 ## Knowledge

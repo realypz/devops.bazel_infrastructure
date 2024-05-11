@@ -19,3 +19,16 @@ config_setting(
         ":os": "linux",
     },
 )
+
+string_flag(
+    # "The architecture to build for"
+    name = "compiler",
+    build_setting_default = "default",
+)
+
+config_setting(
+    name = "clang",
+    flag_values = {
+        ":compiler": "clang",
+    },
+)
