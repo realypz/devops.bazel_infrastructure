@@ -6,9 +6,11 @@ void printCompilerInfo()
 {
 // Compiler info
 #ifdef __clang__
-    std::cout << "Compiler: Clang " << __clang_major__ << "." << __clang_minor__ << "." << __clang_patchlevel__ <<  "\n";
+    std::cout << "Compiler: Clang " << __clang_major__ << "." << __clang_minor__ << "."
+              << __clang_patchlevel__ << "\n";
 #elif __GNUC__
-    std::cout << "Compiler: gcc " << __GNUC__ << '.' << __GNUC_MINOR__ << '.' << __GNUC_PATCHLEVEL__ << "\n";
+    std::cout << "Compiler: gcc " << __GNUC__ << '.' << __GNUC_MINOR__ << '.' << __GNUC_PATCHLEVEL__
+              << "\n";
 #else
     std::cout << "Compiler: Unknown\n";
 #endif
