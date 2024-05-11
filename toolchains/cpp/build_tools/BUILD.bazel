@@ -1,5 +1,5 @@
-load("//toolchains/cpp/build_config:llvm_dir.bzl", "LLVM_TOOLCHAIN_DICT")
-load("//toolchains/cpp/build_config:llvm_toolchain_config.bzl", "MACRO_llvm_toolchain_config")
+load("//toolchains/cpp/build_tools:llvm_dir.bzl", "LLVM_TOOLCHAIN_DICT")
+load("//toolchains/cpp/build_tools:llvm_toolchain_config.bzl", "MACRO_llvm_toolchain_config")
 
 ##### macOS llvm toolchain #####
 MACRO_llvm_toolchain_config(

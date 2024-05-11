@@ -1,6 +1,6 @@
 load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
-load("//toolchains/cpp/build_config:llvm_dir.bzl", "LLVM_TOOLCHAIN_DICT")
+load("//toolchains/cpp/build_tools:llvm_dir.bzl", "LLVM_TOOLCHAIN_DICT")
 load("//toolchains/cpp/format:clang_format.bzl", "clang_format_check")
 
 genrule(

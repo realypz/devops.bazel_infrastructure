@@ -58,10 +58,10 @@ bazelisk run //tests/cpp:hello
 # Use the defined toolchain.
 # NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
 # Instead, it will silently resolve to the default toolchain.
-bazelisk run  --extra_toolchains=//toolchains/cpp:macosx.all_arch.homebrew_llvm_toolchain \
+bazelisk run  --extra_toolchains=//toolchains/cpp/build_tools:macosx.all_arch.homebrew_llvm_toolchain \
  --cxxopt="--verbose" //tests/cpp:hello
 
-bazelisk run  --extra_toolchains=//toolchains/cpp:linux.all_arch.llvm_toolchain \
+bazelisk run  --extra_toolchains=//toolchains/cpp/build_tools:linux.all_arch.llvm_toolchain \
  --cxxopt="--verbose" //tests/cpp:hello
 
 # Run bazel buildifier
