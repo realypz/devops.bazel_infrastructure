@@ -1,4 +1,5 @@
 # Define the LLVM toolchain dictionary, sysroot etc for different platforms.
+# Please adapt these values according to your system.
 LLVM_TOOLCHAIN_DICT = \
     {
         "linux": {

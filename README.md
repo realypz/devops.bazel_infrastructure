@@ -58,7 +58,7 @@ bazelisk run //tests/cpp:hello
 # To use llvm toolchain (work for both macOS and Linux, because an alias target is used)
 #   NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
 #         Instead, it will silently resolve to the default toolchain.
-bazelisk run  --extra_toolchains=//toolchains/cpp/build_tools:llvm_toolchain \
+bazelisk run --extra_toolchains=//toolchains/cpp/build_tools:llvm_toolchain \
   --cxxopt="--verbose" //tests/cpp:hello
 
 # Run bazel buildifier
