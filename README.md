@@ -69,7 +69,8 @@ bazelisk run  --extra_toolchains=//toolchains/cpp:linux.all_arch.llvm_toolchain 
 buildifier -r .
 
 # Clang format
-bazelisk run //toolchains/cpp/format:clang_format_fix
+bazelisk run //toolchains/cpp/format:clang_format_fix --//toolchains/Bazel/common/platform:os=macosx
+bazelisk run //toolchains/cpp/format:clang_format_fix --//toolchains/Bazel/common/platform:os=linux
 ```
 
 ## Knowledge

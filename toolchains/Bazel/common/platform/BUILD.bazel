@@ -1,0 +1,21 @@
+load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
+
+string_flag(
+    # "The operating system to build for"
+    name = "os",
+    build_setting_default = "macosx",
+)
+
+config_setting(
+    name = "macosx",
+    flag_values = {
+        ":os": "macosx",
+    },
+)
+
+config_setting(
+    name = "linux",
+    flag_values = {
+        ":os": "linux",
+    },
+)

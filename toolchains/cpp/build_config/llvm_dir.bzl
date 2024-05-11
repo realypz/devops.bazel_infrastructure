@@ -1,5 +1,5 @@
+# Define the LLVM toolchain dictionary, sysroot etc for different platforms.
 LLVM_TOOLCHAIN_DICT = \
-    """Define the LLVM toolchain dictionary, sysroot etc for different platforms."""
     {
         "linux": {
             "llvm_dir": "/usr/lib/llvm-18",
