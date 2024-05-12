@@ -10,6 +10,7 @@ Test binary.
 void* threadFunction(void* arg)
 {
     // Perform thread tasks here...
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
     printf("Thread is running...\n");
     return NULL;
 }
@@ -24,6 +25,7 @@ int main()
     printCompilerInfo();
 
     { // System library pthread works
+        // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
         pthread_t thread_id;
         pthread_create(&thread_id, NULL, threadFunction, NULL);
         pthread_join(thread_id, NULL);
@@ -32,7 +34,7 @@ int main()
     { // libunwind works
         try
         {
-            // iWantThrow();
+            iWantThrow();
         }
         catch (const std::exception& e)
         {
@@ -41,7 +43,7 @@ int main()
     }
 
     std::atomic_int a(0);
-    std::cout << a.load() << std::endl;
+    std::cout << a.load() << "\n";
 
     return 0;
 }

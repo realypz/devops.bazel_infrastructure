@@ -67,6 +67,22 @@ buildifier -r .
 
 # Clang format
 bazelisk run //toolchains/cpp/format:clang_format_fix
+
+#   You can also specify the config settings in command, e.g.
+#       bazelisk run //toolchains/cpp/format:clang_format_fix --//toolchains/Bazel/common/platform:os=macosx
+#       bazelisk run //toolchains/cpp/format:clang_format_fix --//toolchains/Bazel/common/platform:os=linux
+#   But not necessary.
+
+# Clang-tidy
+/opt/homebrew/Cellar/llvm/18.1.5/bin/clang-tidy \
+ --config-file=toolchains/cpp/clang_tidy/.clang_tidy \
+ tests/cpp/hello.cpp
+ --checks=-*,clang-analyzer-*,modernize-*,cppcoreguidelines-*
+
+# Clang-tidy
+bazelisk build --cxxopt="-std=c++20" //tests/cpp/my_hello:hello \
+  --aspects //toolchains/cpp/clang_tidy:clang_tidy.bzl%clang_tidy_aspect \
+  --output_groups=report -s --verbose_failures -s
 ```
 
 
