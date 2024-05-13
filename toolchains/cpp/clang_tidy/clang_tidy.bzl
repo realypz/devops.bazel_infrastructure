@@ -11,7 +11,7 @@ def _exsits_in_list(value, list):
             return True
     return False
 
-def _rule_sources(ctx):
+def _rule_sources(this_rule):
     """
     Returns the sources of the rule.
     """
@@ -34,8 +34,8 @@ def _rule_sources(ctx):
     source_files = []
 
     # ctx.rule (rule_attributes): Information about attributes of a rule an aspect is applied to.
-    if hasattr(ctx.rule.attr, "srcs"):
-        for src in ctx.rule.attr.srcs:
+    if hasattr(this_rule.attr, "srcs"):
+        for src in this_rule.attr.srcs:
             # NOTE: src is a File object. https://bazel.build/rules/lib/builtins/File
             #      src.is_source: True if the file it is NOT a generated file.
             source_files += [
@@ -44,8 +44,8 @@ def _rule_sources(ctx):
                 if src.is_source and _exsits_in_list(src.extension, PERMITTED_FILE_EXTENSIONS)
             ]
 
-    if hasattr(ctx.rule.attr, "hdrs"):
-        for hdr in ctx.rule.attr.hdrs:
+    if hasattr(this_rule.attr, "hdrs"):
+        for hdr in this_rule.attr.hdrs:
             source_files += [
                 hdr
                 for hdr in hdr.files.to_list()
@@ -199,8 +199,15 @@ def _clang_tidy_aspect_impl(target, ctx):
     if target.label.workspace_root.startswith("external"):
         return []
 
+    # TODO: Figure out target and provider. https://bazel.build/extending/rules#targets
+
+    this_rule = ctx.rule
+
+    print(target.label.name)
+    print(this_rule.attr.name)
+
     # Targets with specific tags will not be formatted
-    if ctx.rule.attr.tags == CLANG_TIDY_IGNORE_TAG:
+    if this_rule.attr.tags == CLANG_TIDY_IGNORE_TAG:
         return []
 
     wrapper = ctx.attr._clang_tidy_wrapper.files_to_run
@@ -210,11 +217,11 @@ def _clang_tidy_aspect_impl(target, ctx):
     config = ctx.attr._clang_tidy_config.files.to_list()[0]
     compilation_context = target[CcInfo].compilation_context  # target is e.g. //example:lib
 
-    rule_flags = ctx.rule.attr.copts if hasattr(ctx.rule.attr, "copts") else []
+    rule_flags = this_rule.attr.copts if hasattr(this_rule.attr, "copts") else []
     c_flags = _filter_unspported_flags(_toolchain_flags(ctx, ACTION_NAMES.c_compile) + rule_flags) + ["-xc"]
     cxx_flags = _filter_unspported_flags(_toolchain_flags(ctx, ACTION_NAMES.cpp_compile) + rule_flags) + ["-xc++"]
 
-    srcs = _rule_sources(ctx)
+    srcs = _rule_sources(this_rule)
 
     outputs = [
         _run_tidy(
