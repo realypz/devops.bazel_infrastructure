@@ -1,6 +1,33 @@
 cc_library(
     name = "sys_info",
-    srcs = ["sys_info.cpp"],
+    srcs = ["src/sys_info.cpp"],
     hdrs = ["sys_info.h"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "foo",
+    srcs = ["src/foo.cpp"],
+    hdrs = ["foo.h"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "bar",
+    srcs = ["src/bar.cpp"],
+    hdrs = ["bar.h"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "foobar",
+    srcs = [
+        "src/bar.cpp",
+        "src/foo.cpp",
+    ],
+    hdrs = [
+        "bar.h",
+        "foo.h",
+    ],
     visibility = ["//visibility:public"],
 )
