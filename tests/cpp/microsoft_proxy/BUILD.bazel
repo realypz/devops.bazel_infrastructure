@@ -1,0 +1,15 @@
+cc_library(
+    name = "proxy",
+    srcs = [],
+    hdrs = ["proxy.h"],
+    visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "tests",
+    srcs = ["tests/proxy_test.cpp"],
+    deps = [
+        ":proxy",
+        "@googletest//:gtest_main",
+    ],
+)

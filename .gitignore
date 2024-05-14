@@ -7,3 +7,6 @@ bazel-devops.bazel_infrastructure
 
 # Vscode
 .vscode
+
+# temporary files
+.tmp

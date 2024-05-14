@@ -3,6 +3,8 @@ module(
     version = "0.0.0",
 )
 
+bazel_dep(name = "googletest", version = "1.14.0")
+
 # register_toolchains(
 #     "//toolchains/C++:macosx_homebrew_llvm_toolchain_wrapper"
 # )

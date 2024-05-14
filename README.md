@@ -53,13 +53,13 @@ After these steps, you should be able to use `bazelisk` directly in terminal.
 ```shell
 # Default run, which will invoke the Bazel-determined toolchain.
 # NOTE: Bazel-determined toolchain is not the same as system default compiler and linker.
-bazelisk run //tests/cpp:hello 
+bazelisk run //tests/cpp/my_hello:hello 
 
 # To use llvm toolchain (work for both macOS and Linux, because an alias target is used)
 #   NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
 #         Instead, it will silently resolve to the default toolchain.
 bazelisk run --extra_toolchains=//toolchains/cpp/build_tools:llvm_toolchain \
-  --cxxopt="--verbose" //tests/cpp:hello
+  --cxxopt="--verbose" //tests/cpp/my_hello:hello
 
 # Run bazel buildifier
 # Requires install the buildifier manually.
