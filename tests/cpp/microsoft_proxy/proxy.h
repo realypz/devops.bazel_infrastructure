@@ -1,6 +1,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+/*
+https://devblogs.microsoft.com/cppblog/proxy-runtime-polymorphism-made-easier-than-ever/
+*/
+
 #ifndef _MSFT_PROXY_
 #define _MSFT_PROXY_
 
@@ -109,6 +113,7 @@ struct instantiated_traits<T, TL, std::index_sequence<Is...>, Args...>
 {
     using type = T<Args..., std::tuple_element_t<Is, TL>...>;
 };
+
 template <template <class...> class T, class TL, class... Args>
 using instantiated_t =
     typename instantiated_traits<T, TL, std::make_index_sequence<std::tuple_size_v<TL>>,
@@ -228,10 +233,12 @@ consteval bool is_invoker_well_formed()
     }
     return false;
 }
+
 template <class D, class T, bool NE, class R, class... Args>
 concept invocable_dispatch = requires {
     typename D::template invoker<T>;
 } && is_invoker_well_formed<typename D::template invoker<T>, T, NE, R, Args...>();
+
 template <class D, class P, bool NE, class R, class... Args>
 concept invocable_dispatch_ptr =
     invocable_dispatch<D, typename ptr_traits<P>::target_type, NE, R, Args...> ||

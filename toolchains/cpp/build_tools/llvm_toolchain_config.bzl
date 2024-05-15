@@ -77,15 +77,21 @@ def _create_clang_config_base(llvm_dir, llvm_major_version, sysroot):
             "-lc++",
             "-lc++abi",
             "-lunwind",
-            # "-lm", # TODO: link math library.Disable for now, not necessary at the moment.
+            "-lm", # TODO: link math library.Disable for now, not necessary at the moment.
             "-L{}lib".format(llvm_dir),  # Or equivalent as `--library-directory=<lib>`
-            # "-Bstatic", # NOTE: Disabled for now, don't know how this flag affects the linking.
-            # "-Bdynamic_t", # NOTE: Disabled for now, don't know how this flag affects the linking.
+            "-Bstatic",  # NOTE: Disabled for now, don't know how this flag affects the linking.
+            "-Bdynamic_t",  # NOTE: Disabled for now, don't know how this flag affects the linking.
         ],
-        "archive_flags": [],
+        "archive_flags": ["-static"],
         "link_libs": [],
         "opt_link_flags": [],
-        "unfiltered_compile_flags": [],
+        "unfiltered_compile_flags": [
+            "-no-canonical-prefixes",
+            "-Wno-builtin-macro-redefined",
+            "-D__DATE__=\"redacted\"",
+            "-D__TIMESTAMP__=\"redacted\"",
+            "-D__TIME__=\"redacted\"",
+        ],
         "coverage_compile_flags": ["-fprofile-instr-generate", "-fcoverage-mapping"],
         "coverage_link_flags": ["-fprofile-instr-generate"],
         "supports_start_end_lib": False,
