@@ -1,5 +1,10 @@
 /*
- bazelisk run --cxxopt="-std=c++20" --cxxopt="--verbose" //tests/cpp/microsoft_proxy:tests
+bazelisk run --cxxopt="-std=c++20" --cxxopt="--verbose" //tests/cpp/microsoft_proxy:tests
+
+bazelisk run --cxxopt="-std=c++20" --cxxopt="--verbose" \
+--extra_toolchains=//toolchains/cpp/build_tools:llvm_toolchain \
+//tests/cpp/microsoft_proxy:tests
+
 */
 #include "../proxy.h"
 
