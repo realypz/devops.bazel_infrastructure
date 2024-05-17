@@ -21,20 +21,20 @@ def _create_clang_config_base(llvm_dir, llvm_major_version, sysroot):
     NOT_USED = "NOT_USED"
 
     return {
-        "cpu": NOT_USED,
-        "compiler": NOT_USED,
-        "host_system_name": NOT_USED,
-        "target_system_name": NOT_USED,
-        "target_libc": NOT_USED,
-        "abi_version": NOT_USED,
-        "abi_libc_version": NOT_USED,
+        "cpu": "darwin",
+        "compiler": "clang",
+        "host_system_name": "aarch64",
+        "target_system_name": "aarch64-apple-macosx",
+        "target_libc": "macosx",
+        "abi_version": "darwin_aarch64",
+        "abi_libc_version": "darwin_aarch64",
         "cxx_builtin_include_directories": [
             paths.join(llvm_dir, "include/c++/v1"),
             paths.join(llvm_dir, "lib/clang/{}/include".format(llvm_major_version)),
             paths.join(sysroot, "usr/include"),
         ],
         "tool_paths": {
-            "ar": paths.join(llvm_dir, "bin/llvm-ar"),
+            "ar": paths.join(llvm_dir, "bin/llvm-libtool-darwin"),
             "cpp": paths.join(llvm_dir, "bin/clang-cpp"),
             "gcc": paths.join(llvm_dir, "bin/clang"),
             "ld": paths.join(llvm_dir, "bin/lld"),
@@ -77,10 +77,10 @@ def _create_clang_config_base(llvm_dir, llvm_major_version, sysroot):
             "-lc++",
             "-lc++abi",
             "-lunwind",
-            "-lm", # TODO: link math library.Disable for now, not necessary at the moment.
+            # "-lm", # TODO: link math library.Disable for now, not necessary at the moment.
             "-L{}lib".format(llvm_dir),  # Or equivalent as `--library-directory=<lib>`
-            "-Bstatic",  # NOTE: Disabled for now, don't know how this flag affects the linking.
-            "-Bdynamic_t",  # NOTE: Disabled for now, don't know how this flag affects the linking.
+            # "-Bstatic",  # NOTE: Disabled for now, don't know how this flag affects the linking.
+            # "-Bdynamic_t",  # NOTE: Disabled for now, don't know how this flag affects the linking.
         ],
         "archive_flags": ["-static"],
         "link_libs": [],
