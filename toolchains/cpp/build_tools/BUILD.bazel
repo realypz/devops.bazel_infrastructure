@@ -7,6 +7,7 @@ MACRO_llvm_toolchain_config(
     llvm_dir = LLVM_TOOLCHAIN_DICT["macosx"]["llvm_dir"],
     llvm_major_version = LLVM_TOOLCHAIN_DICT["macosx"]["llvm_major_version"],
     sysroot = LLVM_TOOLCHAIN_DICT["macosx"]["sysroot"],
+    target_os = "macosx",
 )
 
 filegroup(name = "empty")
@@ -43,6 +44,7 @@ MACRO_llvm_toolchain_config(
     llvm_dir = LLVM_TOOLCHAIN_DICT["linux"]["llvm_dir"],
     llvm_major_version = LLVM_TOOLCHAIN_DICT["linux"]["llvm_major_version"],
     sysroot = LLVM_TOOLCHAIN_DICT["linux"]["sysroot"],
+    target_os = "linux",
 )
 
 cc_toolchain(
