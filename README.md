@@ -80,6 +80,15 @@ bazelisk run //toolchains/cpp/format:clang_format_fix
 * [LLVM release](https://github.com/llvm/llvm-project/releases)
 * [Assembly a Complete Clang toolchain](https://clang.llvm.org/docs/Toolchain.html#language-frontends-for-other-languages)
 
+## Bazel verbose flags
+```shell
+# For C++
+--cxxopt="--verbose"
+
+# For Bazel
+--sandbox_debug -s
+```
+
 ## Helper commands
 ```shell
 clang -print-targets
