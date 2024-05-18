@@ -74,19 +74,32 @@ bazelisk run //toolchains/cpp/format:clang_format_fix
 ```
 
 ## Knowledge
-### Github repos
+### Bazel repos
+* [C/C++ related rules, e.g. `cc_library`, `cc_test`](https://github.com/bazelbuild/bazel/blob/master/src/main/starlark/builtins_bzl/common/cc/)
+* [`cc_toolchain_config`](https://github.com/bazelbuild/bazel/blob/master/tools/cpp/unix_cc_toolchain_config.bzl)
 * [Toolchain field check](https://github.com/bazelbuild/bazel/blob/master/src/main/starlark/builtins_bzl/common/cc/cc_toolchain_provider_helper.bzl#L33)
-* [Toolchain config](https://cs.opensource.google/bazel/bazel/+/master:tools/cpp/unix_cc_toolchain_config.bzl;l=1509)
+
+### Other repos
 * [LLVM release](https://github.com/llvm/llvm-project/releases)
 * [Assembly a Complete Clang toolchain](https://clang.llvm.org/docs/Toolchain.html#language-frontends-for-other-languages)
 
-## Bazel verbose flags
+## Bazel commands or flags
+### Flags
 ```shell
-# For C++
+# For C++ rule level
 --cxxopt="--verbose"
 
-# For Bazel
+# For Bazel building level
 --sandbox_debug -s
+```
+
+### Helper commands
+```shell
+# Display the bazel build cache folder for the current workspace
+bazelisk info output_base
+
+# Clean the bazel build cache
+bazelisk clean
 ```
 
 ## Helper commands
