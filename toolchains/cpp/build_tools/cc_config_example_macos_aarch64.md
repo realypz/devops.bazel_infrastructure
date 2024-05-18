@@ -1,8 +1,6 @@
 ## An example of The toolchain config
 
 ```python
-DEBUG: /private/var/tmp/_bazel_ypz/cea4ec323ef2588ec86f57d74bb4e67a/external/toolchains_llvm~/toolchain/cc_toolchain_config.bzl:318:10
-
 cc_toolchain_config.bzl:318:10: name:  local-aarch64-darwin
 cc_toolchain_config.bzl:319:10: cpu:  darwin
 cc_toolchain_config.bzl:320:10: compiler:  clang

@@ -1,8 +1,6 @@
 module(
-    name = "y_cpp_toolchain",
+    name = "ypz.devops.bazel_infra",
     version = "0.0.0",
 )
 
-# register_toolchains(
-#     "//toolchains/C++:macosx_homebrew_llvm_toolchain_wrapper"
-# )
+bazel_dep(name = "googletest", version = "1.14.0")

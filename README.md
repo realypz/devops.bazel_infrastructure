@@ -53,13 +53,13 @@ After these steps, you should be able to use `bazelisk` directly in terminal.
 ```shell
 # Default run, which will invoke the Bazel-determined toolchain.
 # NOTE: Bazel-determined toolchain is not the same as system default compiler and linker.
-bazelisk run //tests/cpp:hello 
+bazelisk run //tests/cpp/my_hello:hello 
 
 # To use llvm toolchain (work for both macOS and Linux, because an alias target is used)
 #   NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
 #         Instead, it will silently resolve to the default toolchain.
 bazelisk run --extra_toolchains=//toolchains/cpp/build_tools:llvm_toolchain \
-  --cxxopt="--verbose" //tests/cpp:hello
+  --cxxopt="--verbose" //tests/cpp/my_hello:hello
 
 # Run bazel buildifier
 # Requires install the buildifier manually.
@@ -74,11 +74,33 @@ bazelisk run //toolchains/cpp/format:clang_format_fix
 ```
 
 ## Knowledge
-### Github repos
+### Bazel repos
+* [C/C++ related rules, e.g. `cc_library`, `cc_test`](https://github.com/bazelbuild/bazel/blob/master/src/main/starlark/builtins_bzl/common/cc/)
+* [`cc_toolchain_config`](https://github.com/bazelbuild/bazel/blob/master/tools/cpp/unix_cc_toolchain_config.bzl)
 * [Toolchain field check](https://github.com/bazelbuild/bazel/blob/master/src/main/starlark/builtins_bzl/common/cc/cc_toolchain_provider_helper.bzl#L33)
-* [Toolchain config](https://cs.opensource.google/bazel/bazel/+/master:tools/cpp/unix_cc_toolchain_config.bzl;l=1509)
+
+### Other repos
 * [LLVM release](https://github.com/llvm/llvm-project/releases)
 * [Assembly a Complete Clang toolchain](https://clang.llvm.org/docs/Toolchain.html#language-frontends-for-other-languages)
+
+## Bazel commands or flags
+### Flags
+```shell
+# For C++ rule level
+--cxxopt="--verbose"
+
+# For Bazel building level
+--sandbox_debug -s
+```
+
+### Helper commands
+```shell
+# Display the bazel build cache folder for the current workspace
+bazelisk info output_base
+
+# Clean the bazel build cache
+bazelisk clean
+```
 
 ## Helper commands
 ```shell

@@ -4,6 +4,6 @@ cc_binary(
         "hello.cpp",
     ],
     deps = [
-        "//tests/cpp/lib:sys_info",
+        "//tests/cpp/my_hello/lib:sys_info",
     ],
 )
