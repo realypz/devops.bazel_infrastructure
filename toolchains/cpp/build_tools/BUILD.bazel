@@ -1,84 +1,11 @@
-load("//toolchains/cpp/build_tools:llvm_dir.bzl", "LLVM_TOOLCHAIN_DICT")
-load("//toolchains/cpp/build_tools:llvm_toolchain_config.bzl", "MACRO_llvm_toolchain_config")
-
-##### macOS llvm toolchain #####
-MACRO_llvm_toolchain_config(
-    name = "macosx_llvm",
-    llvm_dir = LLVM_TOOLCHAIN_DICT["macosx"]["llvm_dir"],
-    llvm_major_version = LLVM_TOOLCHAIN_DICT["macosx"]["llvm_major_version"],
-    sysroot = LLVM_TOOLCHAIN_DICT["macosx"]["sysroot"],
-    target_os = "macosx",
-)
-
-filegroup(name = "empty")
-
-cc_toolchain(
-    name = "_macosx_homebrew_llvm_toolchain",
-    all_files = ":empty",
-    compiler_files = ":empty",
-    dwp_files = ":empty",
-    linker_files = ":empty",
-    objcopy_files = ":empty",
-    strip_files = ":empty",
-    supports_param_files = 0,
-    toolchain_config = ":macosx_llvm",
-    toolchain_identifier = "_macosx_homebrew_llvm_toolchain_identifier",
-)
-
-toolchain(
-    name = "macosx.all_arch.homebrew_llvm_toolchain",
-    exec_compatible_with = [
-        "@platforms//os:macos",
-    ],
-    target_compatible_with = [
-        "@platforms//os:macos",
-    ],
-    toolchain = ":_macosx_homebrew_llvm_toolchain",
-    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
-)
-##### macOS llvm toolchain (end) #####
-
-##### Linux llvm toolchain #####
-MACRO_llvm_toolchain_config(
-    name = "linux_llvm",
-    llvm_dir = LLVM_TOOLCHAIN_DICT["linux"]["llvm_dir"],
-    llvm_major_version = LLVM_TOOLCHAIN_DICT["linux"]["llvm_major_version"],
-    sysroot = LLVM_TOOLCHAIN_DICT["linux"]["sysroot"],
-    target_os = "linux",
-)
-
-cc_toolchain(
-    name = "_linux_llvm_toolchain",
-    all_files = ":empty",
-    compiler_files = ":empty",
-    dwp_files = ":empty",
-    linker_files = ":empty",
-    objcopy_files = ":empty",
-    strip_files = ":empty",
-    supports_param_files = 0,
-    toolchain_config = ":linux_llvm",
-    toolchain_identifier = "_linux_llvm_toolchain_identifier",
-)
-
-toolchain(
-    name = "linux.all_arch.llvm_toolchain",
-    exec_compatible_with = [
-        "@platforms//os:linux",
-    ],
-    target_compatible_with = [
-        "@platforms//os:linux",
-    ],
-    toolchain = ":_linux_llvm_toolchain",
-    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
-)
-##### Linux llvm toolchain (end) #####
-
-##### Toolchain alias #####
 alias(
     name = "llvm_toolchain",
-    actual = select({
-        "@platforms//os:macos": ":macosx.all_arch.homebrew_llvm_toolchain",
-        "@platforms//os:linux": ":linux.all_arch.llvm_toolchain",
-    }),
+    actual = select(
+        {
+            "//toolchains/Bazel/common/platform:linux_x86": "//toolchains/cpp/build_tools/llvm.linux.x86_64:llvm.linux.x86_64.toolchain",
+            "//toolchains/Bazel/common/platform:linux_aarch64": "//toolchains/cpp/build_tools/llvm.linux.aarch64:llvm.linux.aarch64.toolchain",
+            "//toolchains/Bazel/common/platform:macosx_aarch64": "//toolchains/cpp/build_tools/llvm.macosx.aarch64:llvm.macosx.aarch64.toolchain",
+        },
+        no_match_error = "No llvm toolchain found for this platform",
+    ),
 )
-##### Toolchain alias (end) #####
