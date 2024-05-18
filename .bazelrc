@@ -1,0 +1,5 @@
+build:llvm_toolchain --extra_toolchains=//toolchains/cpp/build_tools:llvm_toolchain
+
+build:verbose_all --cxxopt="--verbose" --sandbox_debug -s
+build:verbose_bazel --sandbox_debug -s
+build:verbose_cpp --cxxopt="--verbose"
