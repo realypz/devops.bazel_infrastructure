@@ -6,8 +6,8 @@ load(
 
 _NOT_USED = "NOT_USED"
 
-def _create_clang_config_macos(llvm_dir, llvm_major_version, sysroot):
-    """ Function: Returns a dictionary with the data for unix_cc_toolchain_config. Works for macOS.
+def _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot):
+    """ Function that return a dictionary with the data for unix_cc_toolchain_config. Works for macOS aarch64.
 
     Args:
         llvm_dir (str): The directory where the LLVM toolchain is installed.
@@ -19,7 +19,6 @@ def _create_clang_config_macos(llvm_dir, llvm_major_version, sysroot):
     Returns:
         dict: The configuration for the clang toolchain.
     """
-
     return {
         "cpu": _NOT_USED,  # "darwin",
         "compiler": _NOT_USED,  # "clang",
@@ -98,115 +97,17 @@ def _create_clang_config_macos(llvm_dir, llvm_major_version, sysroot):
         "builtin_sysroot": sysroot,
     }
 
-def _create_clang_config_linux(llvm_dir, llvm_major_version, sysroot):
-    """ Function: Returns a dictionary with the data for unix_cc_toolchain_config. Works for Linux.
-
-    Args:
-        llvm_dir (str): The directory where the LLVM toolchain is installed.
-        llvm_major_version (int): The major version of the LLVM toolchain.
-        sysroot (str): The sysroot to use for the toolchain.
-                       For macosx, typically "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk".
-                       For Linux, typically "/".
-
-    Returns:
-        dict: The configuration for the clang toolchain.
-    """
-
-    return {
-        "cpu": _NOT_USED,  # "darwin",
-        "compiler": _NOT_USED,  # "clang",
-        "host_system_name": _NOT_USED,  # "aarch64",
-        "target_system_name": _NOT_USED,  # "aarch64",
-        "target_libc": "glibc_unknown",
-        "abi_version": _NOT_USED,  # "clang",
-        "abi_libc_version": _NOT_USED,  # "glibc_unknown",
-        "cxx_builtin_include_directories": [
-            paths.join(llvm_dir, "include/c++/v1"),
-            paths.join(llvm_dir, "lib/clang/{}/include".format(llvm_major_version)),
-            paths.join(sysroot, "usr/include"),
-        ],
-        "tool_paths": {
-            "ar": paths.join(llvm_dir, "bin/llvm-ar"),
-            "cpp": paths.join(llvm_dir, "bin/clang-cpp"),
-            "gcc": paths.join(llvm_dir, "bin/clang"),
-            "ld": paths.join(llvm_dir, "bin/lld"),
-            "llvm-cov": paths.join(llvm_dir, "bin/llvm-cov"),
-            "nm": paths.join(llvm_dir, "bin/llvm-nm"),
-            "objcopy": paths.join(llvm_dir, "bin/llvm-objcopy"),
-            "objdump": paths.join(llvm_dir, "bin/objdump"),
-            "strip": paths.join(llvm_dir, "bin/llvm-strip"),
-        },
-        "compile_flags": [
-            "--target=aarch64-unknown-linux-gnu",
-            "-U_FORTIFY_SOURCE",
-            "-fstack-protector",
-            "-fno-omit-frame-pointer",
-            "-fcolor-diagnostics",
-            "-Wall",
-            "-Wthread-safety",
-            "-Wself-assign",
-        ],
-        "dbg_compile_flags": ["-g", "-fstandalone-debug"],
-        "opt_compile_flags": [
-            "-g0",
-            "-O2",
-            "-D_FORTIFY_SOURCE=1",
-            "-DNDEBUG",
-            "-ffunction-sections",
-            "-fdata-sections",
-        ],
-        "cxx_flags": [
-            "-std=c++20",  # Will be overriden by bazel command line arg `--cxxopt="-std=c++<standard>"`
-            "-stdlib=libc++",
-        ],
-        "link_flags": [
-            "--target=aarch64-unknown-linux-gnu",
-            "-lm",
-            "-no-canonical-prefixes",
-            "-fuse-ld=lld",
-            "-Wl,--build-id=md5",
-            "-Wl,--hash-style=gnu",
-            "-Wl,-z,relro,-z,now",
-            "-l:libc++.a",
-            "-l:libc++abi.a",
-            "-l:libunwind.a",
-            "-rtlib=compiler-rt",
-            "-lpthread",
-            "-ldl",
-        ],
-        "archive_flags": [""],
-        "link_libs": [],
-        "opt_link_flags": ["-Wl,--gc-sections"],
-        "unfiltered_compile_flags": [
-            "-no-canonical-prefixes",
-            "-Wno-builtin-macro-redefined",
-            "-D__DATE__=\"redacted\"",
-            "-D__TIMESTAMP__=\"redacted\"",
-            "-D__TIME__=\"redacted\"",
-        ],
-        "coverage_compile_flags": ["-fprofile-instr-generate", "-fcoverage-mapping"],
-        "coverage_link_flags": ["-fprofile-instr-generate"],
-        "supports_start_end_lib": False,
-        "builtin_sysroot": sysroot,
-    }
-
-def MACRO_llvm_toolchain_config(name, target_os, llvm_dir, llvm_major_version, sysroot):
+def MACRO_llvm_toolchain_config(name, llvm_dir, llvm_major_version, sysroot):
     """
     Macro: Instantiate a rule `cc_toolchain_config`.
 
     Args:
-        target_os (str): The target OS for the toolchain config. One of ["macosx", "linux]
         name (str): The name (identifier) of the toolchain config.
         llvm_dir (str): The directory containing the LLVM/Clang installation.
         llvm_major_version (int): The major version of the LLVM/Clang installation.
         sysroot (dir): The sysroot to use for the C++ toolchain.
     """
-    if (target_os == "macosx"):
-        base_config = _create_clang_config_macos(llvm_dir, llvm_major_version, sysroot)
-    elif (target_os == "linux"):
-        base_config = _create_clang_config_linux(llvm_dir, llvm_major_version, sysroot)
-    else:
-        fail("Unsupported target_os: {}".format(target_os))
+    base_config = _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot)
 
     unix_cc_toolchain_config(
         name = name,
