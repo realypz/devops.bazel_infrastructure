@@ -4,7 +4,6 @@ This repo provides **centralized toolchain management** for my personal projects
 What is provided:
 * LLVM Bazel toolchain and the way to use them.
 * Clang format
-* Python tools
 
 The subpurposes are:
 * Document Bazel learning experience.
@@ -53,13 +52,12 @@ After these steps, you should be able to use `bazelisk` directly in terminal.
 ```shell
 # Default run, which will invoke the Bazel-determined toolchain.
 # NOTE: Bazel-determined toolchain is not the same as system default compiler and linker.
-bazelisk run //tests/cpp/my_hello:hello 
+bazelisk build //tests/cpp/my_hello:hello
 
-# To use llvm toolchain (work for both macOS and Linux, because an alias target is used)
+# Build with llvm toolchain (clang compiler, llvm-ar, llvm linker, etc.)
 #   NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
 #         Instead, it will silently resolve to the default toolchain.
-bazelisk run --extra_toolchains=//toolchains/cpp/build_tools:llvm_toolchain \
-  --cxxopt="--verbose" //tests/cpp/my_hello:hello
+bazelisk run --config=llvm_toolchain //tests/cpp/my_hello:hello
 
 # Run bazel buildifier
 # Requires install the buildifier manually.
@@ -67,6 +65,9 @@ buildifier -r .
 
 # Clang format
 bazelisk run //toolchains/cpp/format:clang_format_fix
+
+# Clang-tidy
+bazelisk build --config=clang_tidy //tests/cpp/my_hello:hello
 ```
 
 

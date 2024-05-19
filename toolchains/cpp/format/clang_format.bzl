@@ -1,44 +1,47 @@
 load("@bazel_skylib//lib:shell.bzl", "shell")
 
 def _clang_format_impl(ctx):
-    out_file = ctx.actions.declare_file(ctx.label.name + ".bash")  # ctx.label.name is the name of the rule.
+    wrapper_sh = ctx.actions.declare_file(ctx.label.name + ".sh")  # ctx.label.name is the name of the rule.
     exclude_patterns = ["\\! -path {}".format(shell.quote(p)) for p in ctx.attr.exclude_patterns]
     include_patterns = ["-name {}".format(shell.quote(p)) for p in ctx.attr.patterns]
-    workspace = ctx.file.workspace.path if ctx.file.workspace else ""
+    CURRENT_WORKSPACE = ""
+    workspace = ctx.file.workspace.path if ctx.file.workspace else CURRENT_WORKSPACE
+
     substitutions = {
         "@@EXCLUDE_PATTERNS@@": " ".join(exclude_patterns),
         "@@INCLUDE_PATTERNS@@": " -o ".join(include_patterns),
         "@@CLANG_FORMAT@@": shell.quote(ctx.executable.clang_format_binary.short_path),
+        # Each value in the struct `ctx.executable` is either a File or None.
+        # `short_path` is from Built-in Type `File`.
         "@@DIFF_COMMAND@@": shell.quote(ctx.attr.diff_command),
         "@@MODE@@": shell.quote(ctx.attr.mode),
         "@@WORKSPACE@@": workspace,
     }
+
     ctx.actions.expand_template(
-        template = ctx.file._runner,
-        output = out_file,
+        template = ctx.file._wrapper_template,
+        output = wrapper_sh,
         substitutions = substitutions,
         is_executable = True,
     )
 
     files = [ctx.executable.clang_format_binary]
+
     if ctx.file.workspace:
         files.append(ctx.file.workspace)
 
     return DefaultInfo(
         runfiles = ctx.runfiles(files = files),
-        executable = out_file,
+        executable = wrapper_sh,
     )
 
 _clang_format_exclude = [
-    # Vendored source code dirs
-    "./**/vendor/**",
-    # Rust cargo build dirs
-    "./**/target/**",
-    # Directories used exclusively to store build artifacts are still copied into.
-    "./build-out/**",
-    "./build-bin/**",
-    # fusesoc build dir
-    "./build/**",
+    # NOTE: The bazel symlink directories are automatically excluded when the rule is executed.
+    # "./bazel-out/**",
+    # "./bazel-bin/**",
+    # "./bazel-testlogs/**",
+
+    # TODO: Add directorys in .gitignore
 ]
 
 clang_format_attrs = {
@@ -60,19 +63,21 @@ clang_format_attrs = {
         doc = "Command to execute to display diffs",
     ),
     "clang_format_binary": attr.label(
-        default = "@llvm_toolchain//:clang-format",  # which is a `native_binary`.
-        allow_single_file = True,
-        cfg = "host",
+        # which is a `native_binary`.
+        cfg = "exec",
         executable = True,
-        doc = "The clang-format executable",
+        doc = "The clang-format binary",
     ),
+    # NOTE: Can be disabled since not have a need to run clang-format in another workspace.
     "workspace": attr.label(
-        allow_single_file = True,
+        allow_single_file = True,  # Can be referred as ctx.file.workspace
         doc = "Label of the WORKSPACE file",
     ),
-    "_runner": attr.label(
+    "_wrapper_template": attr.label(
         default = "clang_format.template.sh",
         allow_single_file = True,
+        doc = "The shell template file, typically ends with `.template.sh`." +
+              "The rendered template will be the entry point of execution.",
     ),
 }
 

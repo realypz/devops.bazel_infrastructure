@@ -1,10 +1,12 @@
 load("@bazel_skylib//lib:paths.bzl", "paths")
-load("@bazel_skylib//rules:native_binary.bzl", "native_binary")
 load("//toolchains/cpp/build_tools:llvm_dir.bzl", "LLVM_TOOLCHAIN_DICT")
 load("//toolchains/cpp/format:clang_format.bzl", "clang_format_check")
 
+# This rule creates a symlink to the clang-format binary in the LLVM toolchain.
+#   Do this beacuse the clang-format binary is outside the workspace and we need
+#   to reference it in the clang_format_check rule.
 genrule(
-    name = "create-symlink",
+    name = "_clang-format-symlink",
     srcs = [],
     outs = ["clang-format-symlink"],
     cmd =
@@ -27,21 +29,14 @@ genrule(
     executable = True,
 )
 
-native_binary(
-    name = "clang-format-native-binary",
-    src = ":create-symlink",
-    out = "clang-format-native-binary",
-    visibility = ["//visibility:public"],
-)
-
 clang_format_check(
     name = "clang_format_fix",
-    clang_format_binary = ":clang-format-native-binary",
+    clang_format_binary = ":_clang-format-symlink",
     mode = "fix",
 )
 
 clang_format_check(
     name = "clang_format_diff",
-    clang_format_binary = ":clang-format-native-binary",
+    clang_format_binary = ":_clang-format-symlink",
     mode = "diff",
 )
