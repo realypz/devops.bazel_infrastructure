@@ -36,7 +36,35 @@ def _get_files_to_check(this_rule):
     # ctx.rule (rule_attributes): Information about attributes of a rule an aspect is applied to.
     if hasattr(this_rule.attr, "srcs"):
         for src in this_rule.attr.srcs:
-            # NOTE: src is a File object. https://bazel.build/rules/lib/builtins/File
+            # NOTE: src is a [Target] object. https://bazel.build/rules/lib/builtins/Target
+            # NOTE: "file" field from a [Target] object comes from the [Provider] of an rule target.
+            #       https://bazel.build/rules/lib/providers/Provider
+
+            # Why need two for loops?
+            # Consider the example below, where you provides a filegroup `foobar_files` to the srcs of a cc_library.
+            # Two for loops are needed to unpack the files from the filegroup.
+            ##################
+            # filegroup(
+            #     name = "foobar_srcs",
+            #     srcs = [
+            #         "src/bar.cpp",
+            #         "src/foo.cpp",
+            #     ],
+            #     visibility = ["//visibility:public"],
+            # )
+
+            # cc_library(
+            #     name = "foobar",
+            #     srcs = [
+            #         ":foobar_srcs",
+            #     ],
+            #     hdrs = [
+            #         "bar.h",
+            #         "foo.h",
+            #     ],
+            #     visibility = ["//visibility:public"],
+            # )
+            ##################
 
             for _src in src.files.to_list():
                 # NOTE: src.is_source: True if the file it is NOT a generated file.
@@ -80,7 +108,7 @@ def _filter_unspported_flags(flags):
 
     return [flag for flag in flags if flag not in unsupported_flags]
 
-def _run_tidy(
+def _run_clangtidy_impl(
         ctx,
         wrapper,
         clangtidy_exe,
@@ -92,13 +120,13 @@ def _run_tidy(
     Run clang-tidy on a target and return the suggested fixes.
 
     Args:
-        ctx: The context of the aspect.
-        wrapper: The wrapper script to run clang-tidy.
-        clangtidy_exe: The executable of clang-tidy.
-        clangtidy_cfg: The clang-tidy configuration file.
-        flags: The flags to run clang-tidy.
+        ctx (aspect context): The context of the aspect.
+        wrapper (FullFilesToRunProvider): The wrapper script to run clang-tidy.
+        clangtidy_exe (Target): The executable of clang-tidy.
+        clangtidy_cfg (File): The clang-tidy configuration file.
+        flags (List[String]): The flags to run clang-tidy.
         compilation_context (CompilationContext): The compilation context from a C/C++ target's provider.
-        infile: The input file to run clang-tidy.
+        infile (File): The input file to run clang-tidy.
 
     Returns:
         A file containing the suggested fixes.
@@ -123,7 +151,7 @@ def _run_tidy(
     )
 
     outfile = ctx.actions.declare_file(
-        "bazel_clang_tidy_" + infile.path + "." + ".clang-tidy-report.yaml",
+        infile.basename + "@" + ctx.rule.attr.name + "clang-tidy-report.yaml",
     )
 
     # Create an args object to store the arguments.
@@ -205,31 +233,23 @@ def _clang_tidy_aspect_impl(target, ctx):
     if this_rule.attr.tags == CLANG_TIDY_IGNORE_TAG:
         return []
 
-    wrapper = ctx.attr._clang_tidy_wrapper.files_to_run
-    exe = ctx.attr._clang_tidy_executable
-
-    # additional_deps = ctx.attr._clang_tidy_additional_deps
-    config = ctx.attr._clang_tidy_config.files.to_list()[0]
-    compilation_context = target[CcInfo].compilation_context  # target is e.g. //example:lib
-
     rule_flags = this_rule.attr.copts if hasattr(this_rule.attr, "copts") else []
     c_flags = _filter_unspported_flags(_toolchain_flags(ctx, ACTION_NAMES.c_compile) + rule_flags) + ["-xc"]
     cxx_flags = _filter_unspported_flags(_toolchain_flags(ctx, ACTION_NAMES.cpp_compile) + rule_flags) + ["-xc++"]
 
-    srcs = _get_files_to_check(this_rule)
+    files_to_check = _get_files_to_check(this_rule)
 
     outputs = [
-        _run_tidy(
+        _run_clangtidy_impl(
             ctx,
-            wrapper,
-            exe,
-            # additional_deps,
-            config,
+            ctx.attr._clang_tidy_wrapper.files_to_run,
+            ctx.attr._clang_tidy_executable,
+            ctx.attr._clang_tidy_config.files.to_list()[0],
             c_flags if src.extension == "c" else cxx_flags,
-            compilation_context,
+            target[CcInfo].compilation_context,  # target is e.g. //example:lib,
             src,
         )
-        for src in srcs
+        for src in files_to_check
     ]
 
     return [

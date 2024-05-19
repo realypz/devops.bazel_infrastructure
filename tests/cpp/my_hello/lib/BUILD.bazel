@@ -19,11 +19,19 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
-cc_library(
-    name = "foobar",
+filegroup(
+    name = "foobar_srcs",
     srcs = [
         "src/bar.cpp",
         "src/foo.cpp",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "foobar",
+    srcs = [
+        ":foobar_srcs",
     ],
     hdrs = [
         "bar.h",
