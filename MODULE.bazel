@@ -1,6 +1,8 @@
 module(
-    name = "ypz.devops.bazel_infra",
+    name = "devops.bazel_infrastructure",
     version = "0.0.0",
 )
 
 bazel_dep(name = "googletest", version = "1.14.0")
+bazel_dep(name = "bazel_skylib", version = "1.6.1")
+bazel_dep(name = "platforms", version = "0.0.10")

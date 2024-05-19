@@ -1,0 +1,12 @@
+# Alias
+build:cpp20 --cxxopt="-std=c++20"
+
+build:llvm_toolchain --extra_toolchains=@devops.bazel_infrastructure//toolchains/cpp/build_tools:llvm_toolchain
+
+build:verbose_all --cxxopt="--verbose" --sandbox_debug -s --verbose_failures
+build:verbose_bazel --sandbox_debug -s
+build:verbose_cpp --cxxopt="--verbose"
+
+build:clang_tidy --config=llvm_toolchain --config=cpp20 \
+    --aspects @devops.bazel_infrastructure//toolchains/cpp/clang_tidy:clang_tidy.bzl%clang_tidy_aspect \
+    --output_groups=report
