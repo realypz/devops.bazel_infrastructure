@@ -82,7 +82,7 @@ def _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot):
             "-lpthread",
             "-ldl",
         ],
-        "archive_flags": [""],
+        "archive_flags": [],
         "link_libs": [],
         "opt_link_flags": ["-Wl,--gc-sections"],
         "unfiltered_compile_flags": [
