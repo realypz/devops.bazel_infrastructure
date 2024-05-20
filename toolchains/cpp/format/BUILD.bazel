@@ -33,10 +33,12 @@ clang_format_check(
     name = "clang_format_fix",
     clang_format_binary = ":_clang-format-symlink",
     mode = "fix",
+    visibility = ["//visibility:public"],
 )
 
 clang_format_check(
     name = "clang_format_diff",
     clang_format_binary = ":_clang-format-symlink",
     mode = "diff",
+    visibility = ["//visibility:public"],
 )

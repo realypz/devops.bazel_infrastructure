@@ -54,19 +54,23 @@ After these steps, you should be able to use `bazelisk` directly in terminal.
 For this repo, this means `cd tests/` before run any commands below.
 
 ```shell
-# Default run, which will invoke the Bazel-determined toolchain.
-# NOTE: Bazel-determined toolchain is not the same as system default compiler and linker.
+# Default build with the default toolchain determined by the Bazel-determined toolchain.
+# NOTE: The default toolchain will be the system default C++ toolchain if no C++ toolchain is registered to your project.
+#       Otherwise, the default toolchain will be the registered C++ toolchain that matches your platform.
 bazelisk build //cpp/my_hello:hello
 
 # Build with llvm toolchain (clang compiler, llvm-ar, llvm linker, etc.)
 #   NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
 #         Instead, it will silently resolve to the default toolchain.
-bazelisk build --extra_toolchains=@devops.bazel_infrastructure//toolchains/cpp/build_tools:llvm_toolchain //...
+#   NOTE: `//toolchains:llvm_toolchain` is an alias to the external llvm toolchain.
+bazelisk build --extra_toolchains=//toolchains:llvm_toolchain //...
 
 # Clang format
-bazelisk run @devops.bazel_infrastructure//toolchains/cpp/format:clang_format_fix
+#   NOTE: `//toolchains:clang_format_fix` is an alias to the external clang_format_fix target.
+bazelisk run //toolchains:clang_format_fix
 
 # Clang-tidy
+#   NOTE: I haven't found away to alias an aspect rule.
 bazelisk build \
     --extra_toolchains=@devops.bazel_infrastructure//toolchains/cpp/build_tools:llvm_toolchain \
     --aspects @devops.bazel_infrastructure//toolchains/cpp/clang_tidy:clang_tidy.bzl%clang_tidy_aspect \

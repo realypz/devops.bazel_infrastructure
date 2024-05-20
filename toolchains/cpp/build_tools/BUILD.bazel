@@ -8,4 +8,5 @@ alias(
         },
         no_match_error = "No llvm toolchain found for this platform",
     ),
+    visibility = ["//visibility:public"],
 )
