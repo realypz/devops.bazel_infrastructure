@@ -10,3 +10,6 @@ bazel-devops.bazel_infrastructure
 
 # temporary files
 .tmp
+
+# Test directories
+tests/bazel-*

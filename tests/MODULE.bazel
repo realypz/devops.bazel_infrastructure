@@ -1,0 +1,9 @@
+module(name = "devops.bazel_infrastructure.test")
+
+bazel_dep(name = "devops.bazel_infrastructure", version = "0.0.0")
+local_path_override(
+    module_name = "devops.bazel_infrastructure",
+    path = "..",
+)
+
+bazel_dep(name = "googletest", version = "1.14.0")

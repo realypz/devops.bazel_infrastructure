@@ -49,25 +49,55 @@ After these steps, you should be able to use `bazelisk` directly in terminal.
 
 
 ## Example using command
+**First thing first, switch directory to your own repo** that use this devops repo as dependency.
+
+For this repo, this means `cd tests/` before run any commands below.
+
 ```shell
-# Default run, which will invoke the Bazel-determined toolchain.
-# NOTE: Bazel-determined toolchain is not the same as system default compiler and linker.
-bazelisk build //tests/cpp/my_hello:hello
+# Default build with the default toolchain determined by the Bazel-determined toolchain.
+# NOTE: The default toolchain will be the system default C++ toolchain if no C++ toolchain is registered to your project.
+#       Otherwise, the default toolchain will be the registered C++ toolchain that matches your platform.
+bazelisk build //cpp/my_hello:hello
 
 # Build with llvm toolchain (clang compiler, llvm-ar, llvm linker, etc.)
 #   NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
 #         Instead, it will silently resolve to the default toolchain.
-bazelisk run --config=llvm_toolchain //tests/cpp/my_hello:hello
-
-# Run bazel buildifier
-# Requires install the buildifier manually.
-buildifier -r .
+#   NOTE: `//toolchains:llvm_toolchain` is an alias to the external llvm toolchain.
+bazelisk build --extra_toolchains=//toolchains:llvm_toolchain //...
 
 # Clang format
-bazelisk run //toolchains/cpp/format:clang_format_fix
+#   NOTE: `//toolchains:clang_format_fix` is an alias to the external clang_format_fix target.
+bazelisk run //toolchains:clang_format_fix
 
 # Clang-tidy
-bazelisk build --config=clang_tidy //tests/cpp/my_hello:hello
+#   NOTE: I haven't found away to alias an aspect rule.
+bazelisk build \
+    --extra_toolchains=@devops.bazel_infrastructure//toolchains/cpp/build_tools:llvm_toolchain \
+    --aspects @devops.bazel_infrastructure//toolchains/cpp/clang_tidy:clang_tidy.bzl%clang_tidy_aspect \
+    --output_groups=report \
+    //cpp/my_hello:hello
 ```
 
+If you add a `.bazelrc` file to your own repo with following content, then you will be able to use `--config=<config_name>` in bazel commands.
+```shell
+# Contents of
+build:cpp20 --cxxopt="-std=c++20"
 
+build:llvm_toolchain --extra_toolchains=@devops.bazel_infrastructure//toolchains/cpp/build_tools:llvm_toolchain
+
+build:verbose_all --cxxopt="--verbose" --sandbox_debug -s --verbose_failures
+build:verbose_bazel --sandbox_debug -s
+build:verbose_cpp --cxxopt="--verbose"
+
+build:clang_tidy --config=llvm_toolchain --config=cpp20 \
+    --aspects @devops.bazel_infrastructure//toolchains/cpp/clang_tidy:clang_tidy.bzl%clang_tidy_aspect \
+    --output_groups=report
+```
+
+The commands are:
+```shell
+bazelisk build --config=llvm_toolchain //...
+
+# Clang-tidy
+bazelisk build --config=clang_tidy //cpp/my_hello:hello
+```
