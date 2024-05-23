@@ -7,6 +7,7 @@ import os
 
 ALLOWED_HDR_EXTENSIONS = [".h", ".hpp"]
 
+
 def _generate_macro(base_dir: str, file_path: str) -> str:
     """
     Generate the macro from a file name.
@@ -22,7 +23,7 @@ def _generate_macro(base_dir: str, file_path: str) -> str:
         if file_path.endswith(hdr_extension):
             matched_hdr_extension_found = True
             break
-    assert(matched_hdr_extension_found)
+    assert matched_hdr_extension_found
     raw_macro = file_path.replace(base_dir, "")
     macro = re.sub("[/\.]", "_", raw_macro.upper()) + "_"
     return macro
@@ -136,21 +137,28 @@ def header_guard(base_dir: str, file_path: str) -> None:
 
 
 def list_header_files(base_dir: str) -> list[str]:  # TODO: make `base_dir` available.
-    gitignore_spec = None if not os.path.exists(
-        os.path.join(base_dir, ".gitignore")
-    ) else pathspec.PathSpec.from_lines(
-        pathspec.patterns.GitWildMatchPattern, open(os.path.join(base_dir, ".gitignore"))
+    gitignore_spec = (
+        None
+        if not os.path.exists(os.path.join(base_dir, ".gitignore"))
+        else pathspec.PathSpec.from_lines(
+            pathspec.patterns.GitWildMatchPattern,
+            open(os.path.join(base_dir, ".gitignore")),
+        )
     )
 
     all_hdrs = []
     for extension in ALLOWED_HDR_EXTENSIONS:
-        all_hdrs += glob.glob(pathname=os.path.join(base_dir, f"**/*{extension}"), recursive=False)
+        all_hdrs += glob.glob(
+            pathname=os.path.join(base_dir, f"**/*{extension}"), recursive=False
+        )
 
     files = os.listdir(base_dir)
     for name in files:
         full_path = os.path.join(base_dir, name)
         if os.path.isdir(full_path) and not name.startswith("bazel-"):
-            all_hdrs += glob.glob(pathname=os.path.join(full_path, "**/*.h"), recursive=True)
+            all_hdrs += glob.glob(
+                pathname=os.path.join(full_path, "**/*.h"), recursive=True
+            )
 
     if gitignore_spec:
         print("Found .gitignore file")

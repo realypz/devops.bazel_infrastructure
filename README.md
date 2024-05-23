@@ -75,7 +75,7 @@ bazelisk run //toolchains:clang_format_fix
 bazelisk build --config=clang_tidy //cpp/my_hello:hello
 
 # Header guards
-bazelisk run @devops.bazel_infrastructure//toolchains/Python:header_guard -- --workspace-root=$(pwd)
+bazelisk run //toolchains:header_guard -- --workspace-root=$(pwd)
 ```
 **NOTE**: The `--config` works in the examples above because `.bazelrc` with alias has been added under `test/`. Please add such alias definition according to your needs.
 
