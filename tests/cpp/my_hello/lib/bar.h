@@ -1,8 +1,8 @@
-#ifndef TESTS_CPP_LIB_BAR_H
-#define TESTS_CPP_LIB_BAR_H
+#ifndef _CPP_MY_HELLO_LIB_BAR_H_
+#define _CPP_MY_HELLO_LIB_BAR_H_
 
 #include <iostream>
 
 std::int32_t times(const std::int32_t a, const std::int32_t b);
 
-#endif // TESTS_CPP_LIB_BAR_H
+#endif // _CPP_MY_HELLO_LIB_BAR_H_

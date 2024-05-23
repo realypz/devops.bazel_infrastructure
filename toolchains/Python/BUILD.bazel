@@ -1,0 +1,17 @@
+load("@pip//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_binary")
+
+exports_files(["requirements.txt"])
+
+filegroup(
+    name = "_header_guard_py",
+    srcs = ["header_guard.py"],
+    visibility = ["//visibility:__pkg__"],
+)
+
+py_binary(
+    name = "header_guard",
+    srcs = ["header_guard.py"],
+    visibility = ["//visibility:public"],
+    deps = [requirement("pathspec")],
+)
