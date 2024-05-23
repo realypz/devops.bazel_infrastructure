@@ -4,6 +4,7 @@ This repo provides **centralized toolchain management** for my personal projects
 What is provided:
 * LLVM Bazel toolchain and the way to use them.
 * Clang format
+* Header guards auto generation
 
 The subpurposes are:
 * Document Bazel learning experience.
@@ -63,7 +64,7 @@ bazelisk build //cpp/my_hello:hello
 #   NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
 #         Instead, it will silently resolve to the default toolchain.
 #   NOTE: `//toolchains:llvm_toolchain` is an alias to the external llvm toolchain.
-bazelisk build --extra_toolchains=//toolchains:llvm_toolchain //...
+bazelisk build --config=llvm_toolchain //...
 
 # Clang format
 #   NOTE: `//toolchains:clang_format_fix` is an alias to the external clang_format_fix target.
@@ -71,6 +72,19 @@ bazelisk run //toolchains:clang_format_fix
 
 # Clang-tidy
 #   NOTE: I haven't found away to alias an aspect rule.
+bazelisk build --config=clang_tidy //cpp/my_hello:hello
+
+# Header guards
+bazelisk run //toolchains:header_guard -- --workspace-root=$(pwd)
+```
+**NOTE**: The `--config` works in the examples above because `.bazelrc` with alias has been added under `test/`. Please add such alias definition according to your needs.
+
+You can also run the unshortened commands as below **without** `.bazelrc`.
+```shell
+# Build with llvm toolchain
+bazelisk build --extra_toolchains=//toolchains:llvm_toolchain //...
+
+# Clang-tidy
 bazelisk build \
     --extra_toolchains=@devops.bazel_infrastructure//toolchains/cpp/build_tools:llvm_toolchain \
     --aspects @devops.bazel_infrastructure//toolchains/cpp/clang_tidy:clang_tidy.bzl%clang_tidy_aspect \
@@ -78,9 +92,8 @@ bazelisk build \
     //cpp/my_hello:hello
 ```
 
-If you add a `.bazelrc` file to your own repo with following content, then you will be able to use `--config=<config_name>` in bazel commands.
+An example of `.bazelrc`:
 ```shell
-# Contents of
 build:cpp20 --cxxopt="-std=c++20"
 
 build:llvm_toolchain --extra_toolchains=@devops.bazel_infrastructure//toolchains/cpp/build_tools:llvm_toolchain
@@ -92,12 +105,4 @@ build:verbose_cpp --cxxopt="--verbose"
 build:clang_tidy --config=llvm_toolchain --config=cpp20 \
     --aspects @devops.bazel_infrastructure//toolchains/cpp/clang_tidy:clang_tidy.bzl%clang_tidy_aspect \
     --output_groups=report
-```
-
-The commands are:
-```shell
-bazelisk build --config=llvm_toolchain //...
-
-# Clang-tidy
-bazelisk build --config=clang_tidy //cpp/my_hello:hello
 ```

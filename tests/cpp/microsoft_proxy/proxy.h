@@ -5,8 +5,8 @@
 https://devblogs.microsoft.com/cppblog/proxy-runtime-polymorphism-made-easier-than-ever/
 */
 
-#ifndef _MSFT_PROXY_
-#define _MSFT_PROXY_
+#ifndef _CPP_MICROSOFT_PROXY_PROXY_H_
+#define _CPP_MICROSOFT_PROXY_PROXY_H_
 
 #include <bit>
 #include <concepts>
@@ -1375,4 +1375,4 @@ struct facade_prototype
     struct __NAME : ::pro::details::facade_prototype<__VA_ARGS__>                                  \
     {}
 
-#endif // _MSFT_PROXY_
+#endif // _CPP_MICROSOFT_PROXY_PROXY_H_
