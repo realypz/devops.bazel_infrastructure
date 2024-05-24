@@ -1,0 +1,13 @@
+load(":bazel-buildifier.bzl", "bazel_buildifier")
+
+bazel_buildifier(
+    name = "bazel_buildifier_fix",
+    mode = "fix",
+    visibility = ["//visibility:public"],
+)
+
+bazel_buildifier(
+    name = "bazel_buildifier_check",
+    mode = "check",
+    visibility = ["//visibility:public"],
+)

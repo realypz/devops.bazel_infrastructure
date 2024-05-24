@@ -1,7 +1,7 @@
 # Alias
 build:cpp20 --cxxopt="-std=c++20"
 
-build:llvm_toolchain --extra_toolchains=//toolchains:llvm_toolchain
+build:llvm_toolchain --extra_toolchains=//external_toolchains:llvm_toolchain
 
 build:verbose_all --cxxopt="--verbose" --sandbox_debug -s --verbose_failures
 build:verbose_bazel --sandbox_debug -s

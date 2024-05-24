@@ -63,26 +63,27 @@ bazelisk build //cpp/my_hello:hello
 # Build with llvm toolchain (clang compiler, llvm-ar, llvm linker, etc.)
 #   NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
 #         Instead, it will silently resolve to the default toolchain.
-#   NOTE: `//toolchains:llvm_toolchain` is an alias to the external llvm toolchain.
 bazelisk build --config=llvm_toolchain //...
 
 # Clang format
-#   NOTE: `//toolchains:clang_format_fix` is an alias to the external clang_format_fix target.
-bazelisk run //toolchains:clang_format_fix
+bazelisk run //external_toolchains:clang_format_fix
 
 # Clang-tidy
 #   NOTE: I haven't found away to alias an aspect rule.
 bazelisk build --config=clang_tidy //cpp/my_hello:hello
 
 # Header guards
-bazelisk run //toolchains:header_guard -- --workspace-root=$(pwd)
+bazelisk run //external_toolchains:header_guard -- --workspace-root=$(pwd)
+
+# Bazel Buildifier
+bazelisk run //external_toolchains:bazel_buildifier_fix
 ```
 **NOTE**: The `--config` works in the examples above because `.bazelrc` with alias has been added under `test/`. Please add such alias definition according to your needs.
 
 You can also run the unshortened commands as below **without** `.bazelrc`.
 ```shell
 # Build with llvm toolchain
-bazelisk build --extra_toolchains=//toolchains:llvm_toolchain //...
+bazelisk build --extra_toolchains=//external_toolchains:llvm_toolchain //...
 
 # Clang-tidy
 bazelisk build \
@@ -90,6 +91,8 @@ bazelisk build \
     --aspects @devops.bazel_infrastructure//toolchains/cpp/clang_tidy:clang_tidy.bzl%clang_tidy_aspect \
     --output_groups=report \
     //cpp/my_hello:hello
+
+
 ```
 
 An example of `.bazelrc`:
