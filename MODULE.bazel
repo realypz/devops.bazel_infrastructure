@@ -22,3 +22,6 @@ pip.parse(
     requirements_lock = "//toolchains/Python:requirements.txt",
 )
 use_repo(pip, "pip")
+
+bazel_buildifier_exe = use_extension("//toolchains/bazel_buildifier:buildifier_module.bzl", "bazel_buildifier_exe")
+use_repo(bazel_buildifier_exe, "buildifier_http_file")

@@ -90,6 +90,9 @@ bazelisk build \
     --aspects @devops.bazel_infrastructure//toolchains/cpp/clang_tidy:clang_tidy.bzl%clang_tidy_aspect \
     --output_groups=report \
     //cpp/my_hello:hello
+
+# Bazel Buildifier
+bazelisk run //toolchains:bazel_buildifier_fix
 ```
 
 An example of `.bazelrc`:
