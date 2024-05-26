@@ -77,6 +77,9 @@ bazelisk run //external_toolchains:header_guard -- --workspace-root=$(pwd)
 
 # Bazel Buildifier
 bazelisk run //external_toolchains:bazel_buildifier_fix
+
+# Python Black
+bazelisk run //external_toolchains:python_black
 ```
 **NOTE**: The `--config` works in the examples above because `.bazelrc` with alias has been added under `test/`. Please add such alias definition according to your needs.
 

@@ -1,1 +1,8 @@
+load(":black.bzl", "python_black")
+
 exports_files(["requirements.txt"])
+
+python_black(
+    name = "python_black",
+    visibility = ["//visibility:public"],
+)

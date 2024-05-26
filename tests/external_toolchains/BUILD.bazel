@@ -30,3 +30,8 @@ alias(
     name = "bazel_buildifier_check",
     actual = "@devops.bazel_infrastructure//toolchains/bazel_buildifier:bazel_buildifier_check",
 )
+
+alias(
+    name = "python_black",
+    actual = "@devops.bazel_infrastructure//toolchains/python:python_black",
+)
