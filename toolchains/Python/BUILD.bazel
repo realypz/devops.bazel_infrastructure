@@ -1,1 +1,12 @@
+load(":pyvenv_runner.bzl", "pyvenv_runner")
+
 exports_files(["requirements.txt"])
+
+exports_files(["run_black_cmd.sh"])
+
+pyvenv_runner(
+    name = "python_black",
+    requirements = "requirements.txt",
+    script = "run_black_cmd.sh",
+    visibility = ["//visibility:public"],
+)

@@ -4,13 +4,12 @@ This repo provides **centralized toolchain management** for my personal projects
 What is provided:
 * LLVM Bazel toolchain and the way to use them.
 * Clang format
-* Header guards auto generation
+* Bazel buildifier formatting
+* Header guards auto generation and complete
+* Python formatting with Black
 
-The subpurposes are:
-* Document Bazel learning experience.
-* Document the typical C++ toolchain setup.
-
-## Preparation
+## Setup Before Using This ToolChain
+The toolchain so far supports **macOS aarc64, Linux aarch64 and Linux x86_64**. Other platforms and CPUs are not supported.
 ### 1. [Install Bazelisk](https://github.com/bazelbuild/bazelisk?tab=readme-ov-file#installation)<br>
 Bazelisk is a bazel package manager. It works as symlink to a specified version of bazel executable.
 * On macOS: `brew install bazelisk`
@@ -48,39 +47,53 @@ After these steps, you should be able to use `bazelisk` directly in terminal.
     sudo apt-get install libc++-18-dev libc++abi-18-dev
     ```
 
+### 3. Use the Toolchain Repo in your Bazel projects
+Add the code below to the `MODULE.bazel` file of your project.
+```python
+bazel_dep(name = "devops.bazel_infrastructure", version = "0.0.0")
+git_override(
+    module_name = "devops.bazel_infrastructure",
+    commit = "Please refer to the latest commit hash in main",
+    remote = "https://github.com/realypz/devops.bazel_infrastructure.git",
+)
+```
 
-## Example using command
-**First thing first, switch directory to your own repo** that use this devops repo as dependency.
-
-For this repo, this means `cd tests/` before run any commands below.
-
+## Usage of The Toolchains
+**First thing first, switch directory to your own repo** that use this devops repo as dependency. For this repo, this means `cd tests/` before run any commands below.
+### 1. C++
 ```shell
-# Default build with the default toolchain determined by the Bazel-determined toolchain.
-# NOTE: The default toolchain will be the system default C++ toolchain if no C++ toolchain is registered to your project.
-#       Otherwise, the default toolchain will be the registered C++ toolchain that matches your platform.
-bazelisk build //cpp/my_hello:hello
-
 # Build with llvm toolchain (clang compiler, llvm-ar, llvm linker, etc.)
 #   NOTE: --extra_toolchain will not exit with error if an unmatched (e.g. processor type, os type)toolchain is referred.
 #         Instead, it will silently resolve to the default toolchain.
 bazelisk build --config=llvm_toolchain //...
 
+# Clang-tidy
+bazelisk build --config=clang_tidy //...
+
 # Clang format
 bazelisk run //external_toolchains:clang_format_fix
 
-# Clang-tidy
-#   NOTE: I haven't found away to alias an aspect rule.
-bazelisk build --config=clang_tidy //cpp/my_hello:hello
-
 # Header guards
 bazelisk run //external_toolchains:header_guard -- --workspace-root=$(pwd)
+```
 
+### 2. Python
+```shell
+# Formatting by Black
+bazelisk run //external_toolchains:python_black
+```
+
+### 3. Bazel Files
+```shell
 # Bazel Buildifier
 bazelisk run //external_toolchains:bazel_buildifier_fix
 ```
-**NOTE**: The `--config` works in the examples above because `.bazelrc` with alias has been added under `test/`. Please add such alias definition according to your needs.
 
-You can also run the unshortened commands as below **without** `.bazelrc`.
+## Explanation of The Command Usage
+### `--config=<>` option
+The `--config` works in the examples above because `.bazelrc` under the workspace directory. An example is [tests/.bazelrc](tests/.bazelrc). Please add such alias definition according to your needs.
+
+You can also run the unshortened commands as below without creating alias.
 ```shell
 # Build with llvm toolchain
 bazelisk build --extra_toolchains=//external_toolchains:llvm_toolchain //...
@@ -91,21 +104,7 @@ bazelisk build \
     --aspects @devops.bazel_infrastructure//toolchains/cpp/clang_tidy:clang_tidy.bzl%clang_tidy_aspect \
     --output_groups=report \
     //cpp/my_hello:hello
-
-
 ```
 
-An example of `.bazelrc`:
-```shell
-build:cpp20 --cxxopt="-std=c++20"
-
-build:llvm_toolchain --extra_toolchains=@devops.bazel_infrastructure//toolchains/cpp/build_tools:llvm_toolchain
-
-build:verbose_all --cxxopt="--verbose" --sandbox_debug -s --verbose_failures
-build:verbose_bazel --sandbox_debug -s
-build:verbose_cpp --cxxopt="--verbose"
-
-build:clang_tidy --config=llvm_toolchain --config=cpp20 \
-    --aspects @devops.bazel_infrastructure//toolchains/cpp/clang_tidy:clang_tidy.bzl%clang_tidy_aspect \
-    --output_groups=report
-```
+### `//external_toolchain:<>`
+The external toolchain Bazel package (i.e. `tests/external_toolchains/BUILD.bazel`) creates alias Bazel targets to the external toolchain targets. You can use similar technique to referring any external targets.
