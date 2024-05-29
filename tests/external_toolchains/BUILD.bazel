@@ -33,5 +33,5 @@ alias(
 
 alias(
     name = "python_black",
-    actual = "@devops.bazel_infrastructure//toolchains/python:python_black",
+    actual = "@devops.bazel_infrastructure//toolchains/Python:python_black",
 )

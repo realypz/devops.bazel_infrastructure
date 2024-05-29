@@ -2,17 +2,26 @@
 set -e
 
 REPO_ROOT="${BUILD_WORKSPACE_DIRECTORY}"
-
 # NOTE: BUILD_WORKSPACE_DIRECTORY is an environment variable when running Bazel executable.
 #       https://bazel.build/docs/user-manual#running-executables
 
 VENV_DIR=$REPO_ROOT/.venv
 REQUIREMENTS_TXT=@@REQUIREMENTS_TXT@@
+SCRIPT=@@SCRIPT@@
+
+SCRIPT_FULL_PATH=$(realpath $SCRIPT)
 
 python3 -m venv "$VENV_DIR"
 source "$VENV_DIR/bin/activate"
 pip install -r "$REQUIREMENTS_TXT"
 
-black $REPO_ROOT
+
+cd $REPO_ROOT
+
+echo 🧹🧹🧹🧹 Formatting py files under $(PWD) ... 🧹🧹🧹🧹
+
+bash $SCRIPT_FULL_PATH
 
 deactivate
+
+exit 0
