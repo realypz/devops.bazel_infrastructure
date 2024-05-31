@@ -1,5 +1,5 @@
-#ifndef _CPP_MY_HELLO_LIB_FOO_H_
-#define _CPP_MY_HELLO_LIB_FOO_H_
+#ifndef CPP_MY_HELLO_LIB_FOO_H_
+#define CPP_MY_HELLO_LIB_FOO_H_
 
 class Foo
 {
@@ -14,4 +14,4 @@ class Foo
     int x_{0};
 };
 
-#endif // _CPP_MY_HELLO_LIB_FOO_H_
+#endif // CPP_MY_HELLO_LIB_FOO_H_
