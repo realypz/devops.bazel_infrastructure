@@ -26,6 +26,8 @@ def _generate_macro(base_dir: str, file_path: str) -> str:
     assert matched_hdr_extension_found
     raw_macro = file_path.replace(base_dir, "")
     macro = re.sub("[/\.]", "_", raw_macro.upper()) + "_"
+    if macro.startswith("_"):
+        macro = macro[1:]
     return macro
 
 
