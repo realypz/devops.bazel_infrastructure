@@ -1,0 +1,19 @@
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+proto_library(
+    name = "msg",
+    srcs = ["msg.proto"],
+    deps = ["@protobuf//:any_proto"],
+)
+
+# This rule converts our .proto file into the C++ specific .h and .cc files.
+cc_proto_library(
+    name = "msg_proto_cpplib",
+    deps = [":msg"],
+)
+
+cc_binary(
+    name = "main",
+    srcs = ["main.cpp"],
+    deps = [":msg_proto_cpplib"],
+)

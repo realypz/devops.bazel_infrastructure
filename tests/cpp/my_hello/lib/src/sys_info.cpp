@@ -1,4 +1,4 @@
-#include "../sys_info.h"
+#include "cpp/my_hello/lib/sys_info.h"
 
 #include <iostream>
 
