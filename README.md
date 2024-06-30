@@ -108,3 +108,10 @@ bazelisk build \
 
 ### `//external_toolchain:<>`
 The external toolchain Bazel package (i.e. `tests/external_toolchains/BUILD.bazel`) creates alias Bazel targets to the external toolchain targets. You can use similar technique to referring any external targets.
+
+## VSCode Extension Support
+1. Install extension [BazelBuild.vscode-bazel](https://marketplace.visualstudio.com/items?itemName=BazelBuild.vscode-bazel)
+    
+    When properly installed and setup, you should be able to see a list of Bazel build targets in VSCode explorer.
+
+2. Add the content in the example [`settings.json`](doc/sample_code/settings.json) to your own VSCode `settings.json`.
