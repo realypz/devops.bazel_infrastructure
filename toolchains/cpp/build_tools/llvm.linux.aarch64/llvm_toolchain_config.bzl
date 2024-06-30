@@ -30,6 +30,7 @@ def _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot):
         "abi_libc_version": _NOT_USED,  # "glibc_unknown",
         "cxx_builtin_include_directories": [
             paths.join(llvm_dir, "include/c++/v1"),
+            paths.join(llvm_dir, "include/aarch64-unknown-linux-gnu/c++/v1".format(llvm_major_version)),
             paths.join(llvm_dir, "lib/clang/{}/include".format(llvm_major_version)),
             paths.join(sysroot, "usr/include"),
         ],
