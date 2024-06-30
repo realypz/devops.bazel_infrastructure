@@ -8,7 +8,7 @@ LLVM_TOOLCHAIN_DICT = \
             "sysroot": "/",
         },
         "macosx": {
-            "llvm_dir": "/opt/homebrew/Cellar/llvm/18.1.6/",
+            "llvm_dir": "/opt/homebrew/Cellar/llvm/18.1.8/",
             "llvm_major_version": 18,
             "sysroot": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
         },
