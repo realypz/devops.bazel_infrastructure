@@ -23,7 +23,7 @@ def _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot):
         "cpu": _NOT_USED,  # "darwin",
         "compiler": _NOT_USED,  # "clang",
         "host_system_name": _NOT_USED,  # "aarch64",
-        "target_system_name": _NOT_USED,  # "NONE",
+        "target_system_name": _NOT_USED, # "aarch64-apple-macosx"
         "target_libc": "macosx",
         "abi_version": _NOT_USED,  # "darwin_aarch64",
         "abi_libc_version": _NOT_USED,  # "darwin_aarch64",
@@ -31,6 +31,7 @@ def _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot):
             paths.join(llvm_dir, "include/c++/v1"),
             paths.join(llvm_dir, "lib/clang/{}/include".format(llvm_major_version)),
             paths.join(sysroot, "usr/include"),
+            paths.join(sysroot, "System/Library/Frameworks"),
         ],
         "tool_paths": {
             "ar": paths.join(llvm_dir, "bin/llvm-libtool-darwin"),
@@ -44,6 +45,7 @@ def _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot):
             "strip": paths.join(llvm_dir, "bin/llvm-strip"),
         },
         "compile_flags": [
+            # "--target=aarch64-apple-macosx",
             # Security
             "-U_FORTIFY_SOURCE",  # https://github.com/google/sanitizers/issues/247
             "-fstack-protector",
@@ -53,6 +55,7 @@ def _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot):
             "-Wall",
             "-Wthread-safety",
             "-Wself-assign",
+            "-fno-define-target-os-macros", # Prevents the definition of TARGET_OS_OSX
         ],
         "dbg_compile_flags": ["-g", "-fstandalone-debug"],
         "opt_compile_flags": [
@@ -77,7 +80,8 @@ def _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot):
             "-lc++abi",
             "-lunwind",
             # "-lm", # TODO: link math library.Disable for now, not necessary at the moment.
-            "-L{}lib".format(llvm_dir),  # Or equivalent as `--library-directory=<lib>`
+            "-L{}lib".format(llvm_dir),
+            # "-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib",  # Or equivalent as `--library-directory=<lib>`
             # "-Bstatic",  # NOTE: Disabled for now, don't know how this flag affects the linking.
             # "-Bdynamic_t",  # NOTE: Disabled for now, don't know how this flag affects the linking.
         ],
