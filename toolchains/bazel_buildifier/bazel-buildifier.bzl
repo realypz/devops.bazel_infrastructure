@@ -1,7 +1,7 @@
 # Bazel buildifier
 load("@bazel_skylib//lib:shell.bzl", "shell")
 
-_BUILDIFIER_REPO_NAME = "buildifier_http_file"  # The name is defined in MODULE.bazel
+_BUILDIFIER_REPO_NAME = "buildifier_exe"  # The name is defined in MODULE.bazel
 
 def _bazel_buildifier_impl(ctx):
     out_file = ctx.actions.declare_file(ctx.label.name + ".bash")
