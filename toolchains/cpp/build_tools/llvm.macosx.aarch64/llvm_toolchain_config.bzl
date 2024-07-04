@@ -23,7 +23,7 @@ def _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot):
         "cpu": _NOT_USED,  # "darwin",
         "compiler": _NOT_USED,  # "clang",
         "host_system_name": _NOT_USED,  # "aarch64",
-        "target_system_name": _NOT_USED, # "aarch64-apple-macosx"
+        "target_system_name": _NOT_USED,  # "aarch64-apple-macosx"
         "target_libc": "macosx",
         "abi_version": _NOT_USED,  # "darwin_aarch64",
         "abi_libc_version": _NOT_USED,  # "darwin_aarch64",
@@ -55,7 +55,7 @@ def _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot):
             "-Wall",
             "-Wthread-safety",
             "-Wself-assign",
-            "-fno-define-target-os-macros", # Prevents the definition of TARGET_OS_OSX
+            "-fno-define-target-os-macros",  # Prevents the definition of TARGET_OS_OSX
         ],
         "dbg_compile_flags": ["-g", "-fstandalone-debug"],
         "opt_compile_flags": [
