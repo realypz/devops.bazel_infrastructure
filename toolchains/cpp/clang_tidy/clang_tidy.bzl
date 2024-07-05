@@ -272,7 +272,7 @@ clang_tidy_aspect = aspect(
             cfg = "exec",
         ),
         "_clang_tidy_executable": attr.label(
-            default = Label("//toolchains/cpp/clang_tidy:clang-tidy-symlink"),
+            default = Label("@llvm_binaries//:clang-tidy"),
             executable = True,
             cfg = "exec",
         ),
