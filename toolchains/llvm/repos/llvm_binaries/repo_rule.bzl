@@ -12,7 +12,7 @@ def _llvm_binaries_impl(rctx):
 
     rctx.template(
         "BUILD.bazel",  # path
-        Label("llvm_binaries/llvm_binaries.BUILD.bazel.tpl"),  # template
+        Label(":internal/llvm_binaries.BUILD.bazel.tpl"),  # template
         substitutions = {
             "@@LLVM_DIR@@": llvm_dir,
         },
