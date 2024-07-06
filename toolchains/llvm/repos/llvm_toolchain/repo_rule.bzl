@@ -40,9 +40,9 @@ def llvm_toolchain_impl(rctx):
         sysroot = default_sysroots[os_arch_pair]
 
     toolchain_configs = {
-        (OS_NAME_LINUX, ARCH_NAME_AMD64): ":llvm_toolchain/linux_x86_64_config.bzl",
-        (OS_NAME_LINUX, ARCH_NAME_AARCH64): ":llvm_toolchain/linux_aarch64_config.bzl",
-        (OS_NAME_MACOS, ARCH_NAME_AARCH64): ":llvm_toolchain/darwin_config.bzl",
+        (OS_NAME_LINUX, ARCH_NAME_AMD64): ":internal/linux_x86_64_config.bzl",
+        (OS_NAME_LINUX, ARCH_NAME_AARCH64): ":internal/linux_aarch64_config.bzl",
+        (OS_NAME_MACOS, ARCH_NAME_AARCH64): ":internal/darwin_config.bzl",
     }
 
     rctx.template(
@@ -53,7 +53,7 @@ def llvm_toolchain_impl(rctx):
 
     rctx.template(
         "BUILD.bazel",  # path
-        Label("llvm_toolchain/BUILD.bazel.tpl"),  # template
+        Label("internal/BUILD.bazel.tpl"),  # template
         substitutions = {
             "@@LLVM_DIR@@": llvm_dir,
             "@@LLVM_MAJOR_VERSION@@": llvm_major_version,

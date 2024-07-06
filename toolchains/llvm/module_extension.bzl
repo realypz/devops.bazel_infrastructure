@@ -8,10 +8,10 @@ load(
     "get_os_arch_pair",
 )
 load(
-    "//toolchains/llvm/repos:llvm_binaries.bzl",
+    "//toolchains/llvm/repos/llvm_binaries:repo_rule.bzl",
     "llvm_binaries_repo",
 )
-load("//toolchains/llvm/repos:llvm_toolchain.bzl", "llvm_toolchain_repo")
+load("//toolchains/llvm/repos/llvm_toolchain:repo_rule.bzl", "llvm_toolchain_repo")
 
 def _llvm_module(module_ctx):
     """Module extension impl of the LLVM related repositories.
