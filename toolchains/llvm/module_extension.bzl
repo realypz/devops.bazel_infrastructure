@@ -1,16 +1,17 @@
 """ Module for the C++ toolchains. """
 
 load(
-    "//toolchains/internal:common.bzl",
+    "//toolchains/bzl_utils/common:common.bzl",
     "OS_NAME_LINUX",
     "OS_NAME_MACOS",
     "SUPPORTED_TARGETS",
     "get_os_arch_pair",
 )
 load(
-    "//toolchains/llvm/internal:llvm_binaries.bzl",
+    "//toolchains/llvm/repos:llvm_binaries.bzl",
     "llvm_binaries_repo",
 )
+load("//toolchains/llvm/repos:llvm_toolchain.bzl", "llvm_toolchain_repo")
 
 def _llvm_module(module_ctx):
     """Module extension impl of the LLVM related repositories.
@@ -48,6 +49,13 @@ def _llvm_module(module_ctx):
             llvm_dir = llvm_dir,
         )
 
+        llvm_toolchain_repo(
+            name = "llvm_toolchain",
+            llvm_dir = llvm_dir,
+            llvm_major_version = "",
+            sysroot = config.sysroot,
+        )
+
 llvm_module = module_extension(
     implementation = _llvm_module,
     tag_classes = {
@@ -56,7 +64,7 @@ llvm_module = module_extension(
                 "llvm_dir": attr.string(
                     doc = "The absolute LLVM directory on the target machine." +
                           "If not provided, the default directory will be used:" +
-                          "darwin: /opt/homebrew/Cellar/llvm/18.X.X" +
+                          "darwin: /opt/homebrew/Cellar/llvm/X.X.X" +
                           "linux:  /usr/lib/llvm-X",
                     default = "",
                 ),

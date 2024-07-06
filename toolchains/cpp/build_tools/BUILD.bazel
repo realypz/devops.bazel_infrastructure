@@ -1,12 +1,5 @@
 alias(
     name = "llvm_toolchain",
-    actual = select(
-        {
-            "//toolchains/Bazel/common/platform:linux_x86": "//toolchains/cpp/build_tools/llvm.linux.x86_64:llvm.linux.x86_64.toolchain",
-            "//toolchains/Bazel/common/platform:linux_aarch64": "//toolchains/cpp/build_tools/llvm.linux.aarch64:llvm.linux.aarch64.toolchain",
-            "//toolchains/Bazel/common/platform:macosx_aarch64": "//toolchains/cpp/build_tools/llvm.macosx.aarch64:llvm.macosx.aarch64.toolchain",
-        },
-        no_match_error = "No llvm toolchain found for this platform",
-    ),
+    actual = "@llvm_toolchain//:llvm_toolchain",
     visibility = ["//visibility:public"],
 )

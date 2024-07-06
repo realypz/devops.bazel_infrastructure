@@ -28,6 +28,7 @@ use_repo(pip, "pip")
 bazel_buildifier_exe = use_extension("//toolchains/bazel_buildifier:buildifier_module.bzl", "bazel_buildifier_exe")
 use_repo(bazel_buildifier_exe, "buildifier_exe")  # NOTE: The repo name is also defined in other files.
 
-llvm_module = use_extension("//toolchains/llvm:module.bzl", "llvm_module")
+llvm_module = use_extension("//toolchains/llvm:module_extension.bzl", "llvm_module")
 llvm_module.config()
 use_repo(llvm_module, "llvm_binaries")
+use_repo(llvm_module, "llvm_toolchain")

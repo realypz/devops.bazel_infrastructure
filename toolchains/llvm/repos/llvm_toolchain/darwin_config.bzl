@@ -80,7 +80,7 @@ def _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot):
             "-lc++abi",
             "-lunwind",
             # "-lm", # TODO: link math library.Disable for now, not necessary at the moment.
-            "-L{}lib".format(llvm_dir),
+            "-L" + paths.join(llvm_dir, "lib"),
             # "-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib",  # Or equivalent as `--library-directory=<lib>`
             # "-Bstatic",  # NOTE: Disabled for now, don't know how this flag affects the linking.
             # "-Bdynamic_t",  # NOTE: Disabled for now, don't know how this flag affects the linking.
