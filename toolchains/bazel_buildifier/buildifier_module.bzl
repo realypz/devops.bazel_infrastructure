@@ -2,7 +2,7 @@
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 load(
-    "//toolchains/internal:common.bzl",
+    "//toolchains/bzl_utils/common:common.bzl",
     "ARCH_NAME_AARCH64",
     "ARCH_NAME_AMD64",
     "OS_NAME_LINUX",
