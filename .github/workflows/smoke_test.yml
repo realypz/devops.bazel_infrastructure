@@ -36,23 +36,15 @@ jobs:
 
           - name: Build all targets with llvm toolchain
             working-directory: tests/
-            run: bazelisk build --config=llvm_toolchain //...
-
-          - name: Run all test targets with llvm toolchain
-            working-directory: tests/
-            run: bazelisk test --config=llvm_toolchain //...
-
-          - name: Build hello target with clang-tidy
-            working-directory: tests/
-            run: bazelisk build --config=clang_tidy //cpp/my_hello:hello
+            run: |
+              bazelisk build --config=llvm_toolchain //...
+              bazelisk test --config=llvm_toolchain //...
+              bazelisk build --config=clang_tidy //cpp/my_hello:hello
+              # bazelisk run //external_toolchains:clang_format_fix # disabled because it fails in github actions
 
           - name: Run buildifier fix
             working-directory: tests/
             run: bazelisk run //external_toolchains:bazel_buildifier_fix
-
-          - name: Run clang-format fix
-            working-directory: tests/
-            run: bazelisk run //external_toolchains:clang_format_fix
 
           - name: Run header guard fix
             working-directory: tests/

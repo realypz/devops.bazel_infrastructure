@@ -1,5 +1,4 @@
-# This BUILD file creates alias for the target in the toolchain libaray.
-# Copy it to your own Bazel projects.
+"""Import the toolchains created by @devops.bazel_infrastructure"""
 
 alias(
     name = "llvm_toolchain",
