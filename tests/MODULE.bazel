@@ -1,3 +1,5 @@
+""" Repo that test the toolchian implementation. """
+
 module(name = "devops.bazel_infrastructure.test")
 
 bazel_dep(name = "devops.bazel_infrastructure", version = "0.0.0")
@@ -5,6 +7,10 @@ local_path_override(
     module_name = "devops.bazel_infrastructure",
     path = "..",
 )
+
+llvm_module = use_extension("@devops.bazel_infrastructure//toolchains/llvm:module_extension.bzl", "llvm_module")
+use_repo(llvm_module, "llvm_binaries")
+use_repo(llvm_module, "llvm_toolchain")
 
 bazel_dep(name = "googletest", version = "1.14.0")
 bazel_dep(name = "protobuf", version = "27.2")

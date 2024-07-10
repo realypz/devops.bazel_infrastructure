@@ -74,7 +74,7 @@ clang_format_attrs = {
         doc = "Label of the WORKSPACE file",
     ),
     "_wrapper_template": attr.label(
-        default = "clang_format.template.sh",
+        default = ":clang_format.template.sh",
         allow_single_file = True,
         doc = "The shell template file, typically ends with `.template.sh`." +
               "The rendered template will be the entry point of execution.",

@@ -52,7 +52,7 @@ def _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot):
             "-fno-omit-frame-pointer",
             # Diagnostics
             "-fcolor-diagnostics",
-            "-Wall", 
+            "-Wall",
             "-Wthread-safety",
             "-Wself-assign",
             "-fno-define-target-os-macros",  # Prevents the definition of TARGET_OS_OSX
