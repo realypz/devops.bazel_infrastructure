@@ -1,6 +1,7 @@
 load("@bazel_tools//tools/build_defs/cc:action_names.bzl", "ACTION_NAMES")
 load("@bazel_tools//tools/cpp:toolchain_utils.bzl", "find_cpp_toolchain")
-load("//toolchains/cpp/clang_tidy:constants.bzl", "CLANG_TIDY_IGNORE_TAG")
+
+CLANG_TIDY_IGNORE_TAG = "clang-tidy-ignore"
 
 def _exsits_in_list(value, list):
     """
@@ -206,7 +207,7 @@ def _run_clangtidy_impl(
     )
     return outfile
 
-def _clang_tidy_aspect_impl(target, ctx):
+def clang_tidy_aspect_impl(target, ctx):
     """The aspect implementation for clang-tidy.
 
     Args:
@@ -257,7 +258,7 @@ def _clang_tidy_aspect_impl(target, ctx):
     ]
 
 clang_tidy_aspect = aspect(
-    implementation = _clang_tidy_aspect_impl,
+    implementation = clang_tidy_aspect_impl,
     fragments = ["cpp"],
     attrs = {
         "_cc_toolchain": attr.label(default = Label("@bazel_tools//tools/cpp:current_cc_toolchain")),
@@ -267,12 +268,12 @@ clang_tidy_aspect = aspect(
         #       that points to the currently selected C++ toolchain).
         #       https://bazel.build/configure/integrate-cpp
         "_clang_tidy_wrapper": attr.label(
-            default = Label("//toolchains/cpp/clang_tidy:run_clang_tidy_sh"),
+            default = Label("//clang_tools/clang_tidy:run_clang_tidy_sh"),
             executable = True,
             cfg = "exec",
         ),
         "_clang_tidy_executable": attr.label(
-            default = Label("@llvm_binaries//:clang-tidy"),
+            default = Label("@@@LLVM_BINARIES_REPO_NAME@@//:clang-tidy"),
             executable = True,
             cfg = "exec",
         ),

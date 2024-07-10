@@ -48,9 +48,19 @@ def get_os_arch_pair(rctx):
     """ Returns the host OS and architecture pair.
 
     Args:
-        rctx (any): The repository rule context.
+        rctx (any): The repository_ctx.
 
     Returns:
         The host OS and architecture pair.
     """
     return (get_os_name(rctx), get_arch_name(rctx))
+
+def check_os_arch(ctx):
+    """ Checks if the host OS and architecture pair is supported.
+
+    Args:
+        ctx (any): The repository_ctx or module_ctx
+    """
+    os, arch = get_os_arch_pair(ctx)
+    if (os, arch) not in SUPPORTED_TARGETS:
+        fail("The os-arch pair is not supported yet with LLVM toolchain binaries!")

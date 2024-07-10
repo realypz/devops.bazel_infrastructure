@@ -1,4 +1,6 @@
-""" Clang-tidy binary """
+""" Clang-tidy shell binary """
+
+exports_files([".clang-tidy"])
 
 sh_binary(
     name = "run_clang_tidy_sh",

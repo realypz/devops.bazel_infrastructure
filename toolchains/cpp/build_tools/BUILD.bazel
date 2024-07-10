@@ -1,5 +1,0 @@
-alias(
-    name = "llvm_toolchain",
-    actual = "@llvm_toolchain//:llvm_toolchain",
-    visibility = ["//visibility:public"],
-)
