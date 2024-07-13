@@ -79,6 +79,7 @@ def _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot):
             "-lc++",
             "-lc++abi",
             "-lunwind",
+            "-fuse-ld=lld", # This will use llvm lld as linker, as opposed of the macOS's ld
             # "-lm", # TODO: link math library.Disable for now, not necessary at the moment.
             "-L" + paths.join(llvm_dir, "lib"),
             # "-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib",  # Or equivalent as `--library-directory=<lib>`
