@@ -57,69 +57,52 @@ jobs:
     # TODO: The following code is not working yet, could possibly due to the apt-get does not install all
     #     the necessary packages.
     
-    # build-and-test-ubuntu-x86_64:
-    #     runs-on: ubuntu-22.04
-    #     steps:
-    #       - uses: actions/checkout@v2
-    #       - uses: bazel-contrib/setup-bazel@0.8.1
-    #         with:
-    #             # Avoid downloading Bazel every time.
-    #             bazelisk-cache: true
-    #             # Store build cache per workflow.
-    #             disk-cache: ${{ github.workflow }}
-    #             # Share repository cache between workflows.
-    #             repository-cache: true
+    build-and-test-ubuntu-x86_64:
+        runs-on: ubuntu-22.04
+        steps:
+          - uses: actions/checkout@v2
+          - uses: bazel-contrib/setup-bazel@0.8.1
+            with:
+                # Avoid downloading Bazel every time.
+                bazelisk-cache: true
+                # Store build cache per workflow.
+                disk-cache: ${{ github.workflow }}
+                # Share repository cache between workflows.
+                repository-cache: true
 
-    #       # Install llvm before the real tests.
-    #       - run: wget https://apt.llvm.org/llvm.sh -P /tmp
-    #       - run: chmod +x /tmp/llvm.sh
-    #       - run: sudo /tmp/llvm.sh 18 all
-    #       # TODO: Why still need install the things below, given "all" is used in the previous command?
-    #       - run: sudo apt-get install libc++-18-dev libc++abi-18-dev libunwind-18-dev libclang-rt-18-dev
+          # Install llvm before the real tests.
+          - run: wget https://apt.llvm.org/llvm.sh -P /tmp
+          - run: chmod +x /tmp/llvm.sh
+          - run: sudo /tmp/llvm.sh 18 all
 
-    #       # Run the tests.
-    #       - name: Build all targets with llvm toolchain
-    #         working-directory: tests/
-    #         run: bazelisk build --config=llvm_toolchain //...
+          # Install python3.10 venv
+          - run: sudo apt-get install python3.10-venv
 
-    #       - name: Run all test targets with llvm toolchain
-    #         working-directory: tests/
-    #         run: bazelisk test --config=llvm_toolchain //...
+          # Run the tests.
+          - name: Build all targets with llvm toolchain
+            working-directory: tests/
+            run: bazelisk build --config=llvm_toolchain //...
 
-    #       - name: Build hello target with clang-tidy
-    #         working-directory: tests/
-    #         run: bazelisk build --config=clang_tidy //cpp/my_hello:hello
+          - name: Run all test targets with llvm toolchain
+            working-directory: tests/
+            run: bazelisk test --config=llvm_toolchain //...
 
-    #       - name: Run buildifier fix
-    #         working-directory: tests/
-    #         run: bazelisk run //external_toolchains:bazel_buildifier_fix
+          - name: Build hello target with clang-tidy
+            working-directory: tests/
+            run: bazelisk build --config=clang_tidy //cpp/my_hello:hello
 
-    #       - name: Run clang-format fix
-    #         working-directory: tests/
-    #         run: bazelisk run //external_toolchains:clang_format_fix
+          - name: Run buildifier fix
+            working-directory: tests/
+            run: bazelisk run //external_toolchains:bazel_buildifier_fix
 
-    #       - name: Run header guard fix
-    #         working-directory: tests/
-    #         run: bazelisk run //external_toolchains:header_guard -- --workspace-root=$(pwd)
+          - name: Run clang-format fix
+            working-directory: tests/
+            run: bazelisk run //external_toolchains:clang_format_fix
 
-    #       - name: Run python black fix
-    #         working-directory: tests/
-    #         run: bazelisk run //external_toolchains:python_black
+          - name: Run header guard fix
+            working-directory: tests/
+            run: bazelisk run //external_toolchains:header_guard -- --workspace-root=$(pwd)
 
-    # TODO: Consider how to cache the fetched llvm toolchain.
-    # format-check:
-    #     runs-on: ubuntu-22.04
-    #     steps:
-    #         - uses: actions/checkout@v2
-    #         - uses: bazel-contrib/setup-bazel@0.8.1
-    #           with:
-    #               # Avoid downloading Bazel every time.
-    #               bazelisk-cache: true
-    #               # Store build cache per workflow.
-    #               disk-cache: ${{ github.workflow }}
-    #               # Share repository cache between workflows.
-    #               repository-cache: true
-    #         - run: wget https://apt.llvm.org/llvm.sh
-    #         - run: chmod +x llvm.sh
-    #         - run: sudo ./llvm.sh 18 all
-    #         - run: bash toolchains/format/format_all.sh
+          - name: Run python black fix
+            working-directory: tests/
+            run: bazelisk run //external_toolchains:python_black
