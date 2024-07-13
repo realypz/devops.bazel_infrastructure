@@ -1,9 +1,10 @@
 """ Module for the C++ toolchains. """
 
+load("@bazel_skylib//lib:paths.bzl", "paths")
 load(
     "//toolchains/bzl_utils/common:common.bzl",
-    "OS_NAME_LINUX",
-    "OS_NAME_MACOS",
+    # "OS_NAME_LINUX",
+    # "OS_NAME_MACOS",
     "SUPPORTED_TARGETS",
     # "check_os_arch",
     "get_os_arch_pair",
@@ -22,6 +23,27 @@ load("//toolchains/llvm/repos/llvm_toolchain:repo_rule.bzl", "llvm_toolchain_rep
 _DEFAULT_LLVM_TOOLCHAIN_REPO_NAME = "llvm_toolchain"
 _DEFAULT_LLVM_BINARIES_REPO_NAME = "llvm_binaries"
 _SEPARATOR = "_"
+
+def _get_llvm_major_version(module_ctx, llvm_dir):
+    """Get the LLVM major version number.
+
+    Args:
+        module_ctx (any): The module context.
+        llvm_dir (str): The LLVM directory.
+
+    Returns:
+        str: The LLVM major version number.
+    """
+
+    llvm_binary_path = paths.join(llvm_dir, "bin/clang")
+    llvm_major_minor_fix = module_ctx.execute(
+        [
+            module_ctx.path(Label("//toolchains/llvm/utils:get_llvm_version.sh")),
+            llvm_binary_path,
+        ],
+    ).stdout
+    llvm_major_version = llvm_major_minor_fix.split(".")[0]
+    return llvm_major_version
 
 def _llvm_module(module_ctx):
     """Module extension impl of the LLVM related repositories.
@@ -42,12 +64,11 @@ def _llvm_module(module_ctx):
     #     If yes, initialize a llvm_repo with the default name "@llvm_toolchain" and "@llvm_binaries".
     #     Ohterwise, do nothing.
     #####
-    # TODO: Implement the script to found the default llvm directory and llvm version number.
-    llvm_found = True
+    llvm_dir = DEFAULT_LLVM_DIR[(this_os, this_arch)]
+    if module_ctx.path(llvm_dir).exists:
+        print("The default LLVM directory {} is found.".format(llvm_dir))
+        llvm_major_version = _get_llvm_major_version(module_ctx, llvm_dir)
 
-    if llvm_found:
-        llvm_dir = DEFAULT_LLVM_DIR[(this_os, this_arch)]
-        llvm_major_version = "18"
         sysroot = DEFAULT_SYSROOT[(this_os, this_arch)]
 
         llvm_binaries_repo(
@@ -63,7 +84,7 @@ def _llvm_module(module_ctx):
             llvm_binaries_repo_name = _DEFAULT_LLVM_BINARIES_REPO_NAME,
         )
 
-    # Create other customized llvm repos if there are any
+    # Create other customized llvm repos if there are any of them being defined in the MODULE.bazel.
     for config in mod.tags.config:
         # Create several llvm related repositories.
 
@@ -75,7 +96,7 @@ def _llvm_module(module_ctx):
                   "in the MODULE.bazel but not created due to not matching the current os-arch pair ({this_os}, {this_arch}).")
             continue
 
-        llvm_major_version = "18"
+        llvm_major_version = _get_llvm_major_version(module_ctx, config.llvm_dir)
 
         llvm_binaries_repo(
             name = llvm_binaries_repo_name,
@@ -132,11 +153,4 @@ llvm_module = module_extension(
             },
         ),
     },
-    # The usage of tag_classes is in MODULE.bazel
-    # llvm_module = use_extension("//toolchains/llvm:module.bzl", "llvm_module")
-    # llvm_module.<tag_class>(
-    #     attr_0 = ...,
-    #     attr_1 = ...,
-    # )
-    # use_repo(llvm_module, "llvm_module")
 )

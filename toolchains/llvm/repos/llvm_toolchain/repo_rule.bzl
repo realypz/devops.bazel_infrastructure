@@ -21,9 +21,6 @@ def llvm_toolchain_impl(rctx):
         fail("The os-arch pair is not supported yet with LLVM toolchain binaries!")
 
     llvm_major_version = rctx.attr.llvm_major_version
-    if llvm_major_version == "":
-        # TODO: Write a function to extract the major version from llvm_dir
-        llvm_major_version = "18"
 
     toolchain_configs_templates = {
         (OS_NAME_LINUX, ARCH_NAME_AMD64): ":internal/template_repo/toolchain_config/linux_x86_64_config.bzl.tpl",
@@ -117,7 +114,7 @@ llvm_toolchain_repo = repository_rule(
         ),
         "llvm_dir": attr.string(
             doc = "The absolute LLVM directory on the target machine. " +
-                  "Example: /opt/homebrew/Cellar/llvm/18.X.X/, /usr/lib/llvm-X",
+                  "Example: /opt/homebrew/opt/llvm/, /usr/lib/llvm-X",
             mandatory = True,
         ),
         "llvm_major_version": attr.string(

@@ -1,0 +1,1 @@
+exports_files(["get_llvm_version.sh"])
