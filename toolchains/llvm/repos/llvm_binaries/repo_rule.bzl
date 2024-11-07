@@ -26,7 +26,7 @@ llvm_binaries_repo = repository_rule(
     attrs = {
         "llvm_dir": attr.string(
             doc = "The absolute LLVM directory on the target machine. " +
-                  "Example: /opt/homebrew/Cellar/llvm/18.X.X/, /usr/lib/llvm-X",
+                  "Example: /opt/homebrew/Cellar/llvm/19.X.X/, /usr/lib/llvm-X",
             mandatory = True,
         ),
     },
