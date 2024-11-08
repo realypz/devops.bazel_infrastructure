@@ -76,15 +76,18 @@ def _create_llvm_toolchain_config(llvm_dir, llvm_major_version, sysroot):
             "-headerpad_max_install_names",
             "-fobjc-link-runtime",
             # -l<library> for linking
+            #"-Bdynamic_t",
+
+            # The -Bstatic option is used to instruct the linker to prefer static linking for libraries that follow this option.
+            "-Bstatic",
             "-lc++",
             "-lc++abi",
-            "-lunwind",
+            "-L" + paths.join(llvm_dir, "lib"),
+            "-L" + paths.join(llvm_dir, "lib/unwind"),
+            "-lunwind",  # Enable this will link to /opt/homebrew/opt/llvm/lib/libunwind.1.dylib, otherwise the macOS internal unwinder
             "-fuse-ld=lld", # This will use llvm lld as linker, as opposed of the macOS's ld
             # "-lm", # TODO: link math library.Disable for now, not necessary at the moment.
-            "-L" + paths.join(llvm_dir, "lib"),
             # "-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib",  # Or equivalent as `--library-directory=<lib>`
-            # "-Bstatic",  # NOTE: Disabled for now, don't know how this flag affects the linking.
-            # "-Bdynamic_t",  # NOTE: Disabled for now, don't know how this flag affects the linking.
         ],
         "archive_flags": ["-static"],
         "link_libs": [],

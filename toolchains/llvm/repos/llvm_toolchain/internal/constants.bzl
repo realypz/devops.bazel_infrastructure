@@ -9,8 +9,8 @@ load(
 )
 
 DEFAULT_LLVM_DIR = {
-    (OS_NAME_LINUX, ARCH_NAME_AMD64): "/usr/lib/llvm-18",
-    (OS_NAME_LINUX, ARCH_NAME_AARCH64): "/usr/lib/llvm-18",
+    (OS_NAME_LINUX, ARCH_NAME_AMD64): "/usr/lib/llvm-19",
+    (OS_NAME_LINUX, ARCH_NAME_AARCH64): "/usr/lib/llvm-19",
     (OS_NAME_MACOS, ARCH_NAME_AARCH64): "/opt/homebrew/opt/llvm",
 }
 

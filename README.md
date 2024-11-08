@@ -39,10 +39,10 @@ After these steps, you should be able to use `bazelisk` directly in terminal.
 * On macOS
 
   * Install homebrew, and make sure `brew` can be invoked in terminal.
-  * Install llvm tools of a specific verison, e.g. `18`
+  * Install llvm tools of a specific verison, e.g. `19`
 
     ```shell
-    brew install llvm@18
+    brew install llvm@19
     ```
 
 * On Ubuntu, follow section **Automatic installation script** at https://apt.llvm.org/.
@@ -58,8 +58,8 @@ After these steps, you should be able to use `bazelisk` directly in terminal.
    If you don't install all llvm packges at once, you might need to install some libraries separately as below (not recommended).
 
     ```shell
-    sudo ./llvm.sh 18
-    sudo apt-get install libc++-18-dev libc++abi-18-dev
+    sudo ./llvm.sh 19
+    sudo apt-get install libc++-19-dev libc++abi-19-dev
     ```
 
 ### 3. Use the Toolchain Repo in your Bazel projects

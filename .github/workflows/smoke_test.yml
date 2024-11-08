@@ -7,7 +7,7 @@ on:
 
 jobs:
     build-and-test-macos-aarch64:
-        runs-on: macos-14
+        runs-on: macos-15
         steps:
           - uses: actions/checkout@v2
           - uses: bazel-contrib/setup-bazel@0.8.1
@@ -18,20 +18,18 @@ jobs:
                 disk-cache: ${{ github.workflow }}
                 # Share repository cache between workflows.
                 repository-cache: true
+
+          # Homebrew packages
           - uses: tecolicom/actions-use-homebrew-tools@v1
             with:
                 # homebrew packages
-                tools: 'llvm@18'
-            
-                # Cache strategy
-                #
-                # yes:      activate cache
-                # no:       no cache
-                # workflow: effective within same workflow (mainly for test)
-                #
+                tools: 'llvm@19'
                 cache: yes
-            
-                # Additional cache key
+                key: ''
+          - uses: tecolicom/actions-use-homebrew-tools@v1
+            with:
+                tools: 'lld'
+                cache: yes
                 key: ''
 
           - name: Build all targets with llvm toolchain
@@ -58,7 +56,7 @@ jobs:
     #     the necessary packages.
     
     build-and-test-ubuntu-x86_64:
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-24.04
         steps:
           - uses: actions/checkout@v2
           - uses: bazel-contrib/setup-bazel@0.8.1
@@ -73,10 +71,9 @@ jobs:
           # Install llvm before the real tests.
           - run: wget https://apt.llvm.org/llvm.sh -P /tmp
           - run: chmod +x /tmp/llvm.sh
-          - run: sudo /tmp/llvm.sh 18 all
+          - run: sudo /tmp/llvm.sh 19 all
 
-          # Install python3.10 venv
-          - run: sudo apt-get install python3.10-venv
+          - run: sudo apt-get install python3.12-venv
 
           # Run the tests.
           - name: Build all targets with llvm toolchain
