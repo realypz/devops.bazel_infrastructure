@@ -1,0 +1,5 @@
+{
+    "bazel.commandLine.commandArgs":[
+        "--config=llvm_toolchain"
+    ]
+}
