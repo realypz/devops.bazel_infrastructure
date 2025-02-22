@@ -56,9 +56,9 @@ def _llvm_module(module_ctx):
     if (this_os, this_arch) not in SUPPORTED_TARGETS:
         fail("The os-arch pair is not supported yet with LLVM toolchain binaries!")
 
-    if len(module_ctx.modules) != 1:
-        fail("Check why len(module_ctx.modules) != 1")
-    mod = module_ctx.modules[0]  # TODO: Check why it is a list.
+    # Only the root module is being used.
+    # ctx.modules[x] where x >= 1 are ignored.
+    mod = module_ctx.modules[0]
 
     ##### Detect whether the default llvm directory can be found or not.
     #     If yes, initialize a llvm_repo with the default name "@llvm_toolchain" and "@llvm_binaries".
@@ -66,6 +66,7 @@ def _llvm_module(module_ctx):
     #####
     llvm_dir = DEFAULT_LLVM_DIR[(this_os, this_arch)]
     if module_ctx.path(llvm_dir).exists:
+        # buildifier: disable=print
         print("The default LLVM directory {} is found.".format(llvm_dir))
         llvm_major_version = _get_llvm_major_version(module_ctx, llvm_dir)
 
@@ -92,6 +93,7 @@ def _llvm_module(module_ctx):
         llvm_binaries_repo_name = _DEFAULT_LLVM_BINARIES_REPO_NAME + _SEPARATOR + config.specifier
 
         if config.os != this_os or config.arch != this_arch:
+            # buildifier: disable=print
             print("The repo {llvm_binaries_repo_name} and {llvm_toolchain_repo_name} are declared " +
                   "in the MODULE.bazel but not created due to not matching the current os-arch pair ({this_os}, {this_arch}).")
             continue

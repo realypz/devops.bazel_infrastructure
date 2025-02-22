@@ -9,6 +9,12 @@ genrule(
     visibility = ["//visibility:public"],
 )
 
+sh_binary(
+    name = "run_clang_format",
+    srcs = [":_clang_format.sh"],
+    visibility = ["//visibility:public"],
+)
+
 genrule(
     name = "clang-tidy",
     srcs = [],

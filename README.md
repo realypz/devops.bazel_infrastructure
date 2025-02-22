@@ -92,6 +92,7 @@ bazelisk build --config=clang_tidy //...
 
 # Clang format
 bazelisk run //external_toolchains:clang_format_fix
+bazelisk run @llvm_binaries//:run_clang_format -- $(realpath .)
 
 # Header guards
 bazelisk run //external_toolchains:header_guard -- --workspace-root=$(pwd)

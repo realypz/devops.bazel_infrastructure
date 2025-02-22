@@ -12,10 +12,19 @@ def _llvm_binaries_impl(rctx):
 
     rctx.template(
         "BUILD.bazel",  # path
-        Label(":internal/llvm_binaries.BUILD.bazel.tpl"),  # template
+        Label(":internal/llvm_binaries.tpl.BUILD.bazel"),  # template
         substitutions = {
             "@@LLVM_DIR@@": llvm_dir,
         },
+    )
+
+    rctx.template(
+        "_clang_format.sh",  # path
+        Label(":internal/clang_format.tpl.sh"),  # template
+        substitutions = {
+            "@@LLVM_DIR@@": llvm_dir,
+        },
+        executable = True,
     )
 
     # Q: Need rctx.file(MODULE.bazel)?
